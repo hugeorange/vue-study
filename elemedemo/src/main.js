@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import VueResource from "vue-resource"
 
-// 引入公共样式 index.styl集成了 base，icon，mixin ,路径同 App.vue 里面的配置
+// 引入公共样式 index.styl集成了 base，icon，mixin ,路径同 App.vue 在 webpack.base.con. js配置别名,只有js可以配置别名
 import 'common/stylus/index.styl';
 
 Vue.use(VueResource);

@@ -32,6 +32,7 @@ export default {
         'v-header':header
     },
     created() {
+        // 创建完成 vue 实例后即请求接口，将值赋给 seller，继而通过 props将获得值传给子组件
         this.$http.get('./api/seller').then((response) => {
             console.log(response.data.data);
            
@@ -44,8 +45,8 @@ export default {
 
 <style lang="stylus" rel="stylesheet/stylus">
 
-// 引入css函数 mixin，注意路径是在 webpack.base.con.js里配置好的
-@import "common/stylus/mixin.styl"
+// 不可在在 webpack.base.con.js里面配置 alias别名
+@import "./common/stylus/mixin.styl"
 
 #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
