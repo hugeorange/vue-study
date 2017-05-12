@@ -1,11 +1,83 @@
 <template>
 	<div class="header">
-		我是 header
+		<div class="content-wraper">
+			<div class="avatar">
+				<!-- v-bind :src="seller.avator" -->
+				<img width='64' height='64' :src="seller.avatar">
+			</div>
+			<div class="content">
+				<div class="title">
+					<span class="brand"></span>
+					<span class="name">{{seller.name}}</span>
+				</div>
+				<div class="description">
+					{{seller.description}}/{{seller.deliveryTime}}分钟送达
+				</div>
+				<!-- 需要先判断 seller存不存在，因为是异步的 -->
+				<div v-if="seller.supports" class="supports" >
+					<span class="icon"></span>
+					<span class="text">{{seller.supports[0].description}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="bulletin-wraper"></div>
 	</div>
 </template>
-<script type="text/ecmascript-6">
-export default {}
+<script>
+export default {
+	props:['seller'],
+	data() {
+		return {
+			
+		}
+	},
+	
+	mounted() {
+		console.log(this.seller);
+	}
+}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 
+@import '../../common/stylus/mixin.styl'
+
+.header
+	color:#fff
+	background-color:#000
+	.content-wraper
+		padding:24px 12px 18px 24px
+		font-size:0
+		.avatar
+			display:inline-block
+			vertical-align:top
+			img
+				border-radius:2px
+		.content
+			display:inline-block
+			margin-left:16px;
+			font-size:14px
+			.title
+				margin:2px 0 8px 0
+				.brand
+					display:inline-block;
+					width:30px;
+					height:18px;
+					vertical-align:bottom
+					bg-image(brand);
+					background-size:30px 18px
+					background-repeat:no-repeat
+				.name
+					margin-left:6px
+					font-size:16px
+					font-weight:bold
+					line-height:8px
+			.description
+				margin-bottom 10px
+	            line-height 12px
+	            font-size 12px
+
+	        	
+        				
+
+		
 </style>

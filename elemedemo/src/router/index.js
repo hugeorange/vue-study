@@ -4,7 +4,8 @@ import goods from '@/components/goods/goods'
 import ratings from '@/components/ratings/ratings'
 import seller from '@/components/seller/seller'
 
-console.log(goods);
+
+// console.log(goods);
 Vue.use(Router)
 
 export default new Router({

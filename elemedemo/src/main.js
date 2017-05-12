@@ -3,6 +3,12 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueResource from "vue-resource"
+
+// 引入公共样式 index.styl集成了 base，icon，mixin ,路径同 App.vue 里面的配置
+import 'common/stylus/index.styl';
+
+Vue.use(VueResource);
 
 Vue.config.productionTip = false
 
