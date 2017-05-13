@@ -52,8 +52,8 @@
 						<h1 class="name"> {{seller.name}} </h1>
 
 						<!-- star组件 -->
-						<div class="star-wrpper">
-							
+						<div class="star-wrapper">
+							<star :size="48" :score="seller.score"></star>
 						</div>
 
 						<!-- 标题信息 -->
@@ -66,8 +66,7 @@
 						<!-- supports内容 -->
 						<ul v-if="seller.supports" class="support">
 							<li class="support-item" v-for="(item,index) in seller.supports">
-								<span class="icon" :class="classMap[seller.supports[index].type]"></span>
-								<span class="text"> {{seller.supports[index].description}} </span>
+								<span class="icon" :class="classMap[seller.supports[index].type]"></span><span class="text"> {{seller.supports[index].description}} </span>
 							</li>
 						</ul>
 
@@ -94,6 +93,7 @@
 	</div>
 </template>
 <script>
+import star from '../../components/star/star'
 export default {
 	props:['seller'],
 	data() {
@@ -108,6 +108,9 @@ export default {
 		hideDetail() {
 			this.detailShow = false;
 		}
+	},
+	components: {
+		star:star
 	},
 	created() {
 		this.classMap = ['decrease','discount','guarantee','invoice','special']
@@ -262,6 +265,7 @@ export default {
 		left:0
 		width:100%
 		height:100%
+		// 元素超出容器产生滚动条
 		overflow:auto
 		background-color:rgba(7,17,27,0.8)
 		
@@ -355,32 +359,27 @@ export default {
 						line-height:24px
 						font-size:12px
 					}
-				}
-				
-				
+				}	
 			}
-		
 		}
 		
-
-
 		// 关闭按钮
 		.detail-close{
 			position: absolute;
 		    width: 32px;
 		    height: 32px;
-		    margin: -64px auto 0 auto;
+		    margin: -50px auto 0 auto;
 		    clear: both;
 		    font-size: 32px;
 		    left: 0;
 		    right: 0;
-		    margin: 0 auto;
-		    bottom: 45px;
 		}
 	}
 
-        		
-        	
+//sticker footers 布局
+// 父集宽高 100% overflow:auto
+// 子集1： min-height:100%; padding-bottom:-64px;给子集2留出64px空间
+// 子集2： position:absolute;left:0;right:0; margin:-64px auto 0 aut0
 
 
 
