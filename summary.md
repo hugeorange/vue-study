@@ -1,6 +1,7 @@
 ### 饿了么 vue 项目总结
 
 > better-scroll
+
     better-scroll 实现列表滚动联动
     1. 初始化 better-scroll
         _initScroll() {
@@ -17,16 +18,18 @@
     2. 在 vue 钩子函数 created 内 this.$nextTick 回调里面调用 better-scroll初始化函数
 
 > 菜单栏根据实物列表滚动实时高亮
+
     1. 通过 _calculateHeight 方法动态计算出 每个列表的标题 的 clientHeight 值，并将其推进一个 listHeight 数组
     2. 当滚动 foods 列表时，会动态计算出 pos.y 的值，
     3. 把这个 pos.y 的值在计算属性里判断 其在 listHeight 数组中对应的 index 值
     4. 然后将菜单列表数组中的 index 值 设置为高亮 
 
 > 点击左侧菜单栏，右侧 foods 列表实时滚动到相应位置
+
     1. 给 menu-item 绑定一个 setMenu(index) 方法
     2. 然后根据这个 index 获取foodslist 里面对应的 li dom 元素
     3. 利用 scrollToElement(el,100) api 自动将foodlist滚动到合适位置
-    
+
     selectMenu(index) {
         // 因为有自动派发事件，所以需要阻止，
         if(!event._constructed) return; 
