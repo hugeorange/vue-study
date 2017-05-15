@@ -15,7 +15,7 @@
         </div>
         <!-- 路由外链 -->
         <div>
-            <router-view></router-view>            
+            <router-view :seller="seller"></router-view>            
         </div>
     </div>
 </template>

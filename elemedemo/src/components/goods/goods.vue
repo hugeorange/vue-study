@@ -3,7 +3,7 @@
 		<!-- 左侧菜单 -->
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
-				<li v-for="(item,index) in goods" class="menu-item">
+				<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index,$event)">
 					<span class="text border-1px">
 						<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
 					</span>
@@ -32,20 +32,39 @@
 		                    		<span class="now">￥{{food.price}}</span>
 		                    		<span class="old"v-show="food.oldPrice">￥{{food.oldPrice}}</span>
 		                  		</div>
+
+		                  		<!-- cartcontrol组件 -->
+		                  		<div class="cart-wrapper">
+		                  			<cartcontrol :food="food"></cartcontrol>
+		                  		</div>
 							</div>
 						</li>
 					</ul>
 				</li>
 			</ul>
-		</div>		
+		</div>	
+		<!-- 底部购物车 -->
+		<shopcar :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>	
 	</div>
 </template>
 
 <script>
+// 引入better-scroll
+import BScroll from 'better-scroll'
+import shopcar from '../../components/shopcar/shopcar'
+import cartcontrol from '../../components/cartcontrol/cartcontrol'
+
 export default {
+	props:['seller'],
+	components: {
+		shopcar,
+		cartcontrol
+	},
 	data() {
 		return {
-			goods:[]
+			goods:[],          //商品信息
+			listHeight:[],     //菜单列表元素
+			scrollY:0,         //食物列表滚动的高度实时计算
 		}
 	},
 	created() {
@@ -57,8 +76,92 @@ export default {
             console.log(response.data.data);
            
             this.goods = response.data.data;
+            this.$nextTick(() => {
+            	this._initScroll();
+            	this._calculateHeight();
+            })
             
         });
+    },
+    computed: {
+    	//根据食物列表所处的位置，判断菜单的class
+    	currentIndex() {
+    		for(var i=0; i<this.listHeight.length; i++){
+    			// 判断菜单栏处于第几个位置
+    			let height1 = this.listHeight[i];
+    			let height2 = this.listHeight[i+1];
+
+    			if(!height2 || (this.scrollY >= height1 && this.scrollY < height2)){
+    				return i;
+    			}
+    		}
+    		return 0;
+    	},
+    	// 选中的商品即购物车内的商品
+    	selectFoods() {
+    		let foods = [];
+    		this.goods.forEach((good) => {
+    			good.foods.forEach((food) => {
+    				if(food.count){
+    					foods.push(food);
+    				}
+    			})
+    		});
+    		console.log(foods);
+    		return foods;
+    	}
+
+	},
+    methods:{
+    	// foodlist 的 height 的高度变化 自动触发计算属性 currentIndex的变化
+    	selectMenu(index) {
+    		// 因为有自动派发事件，所以需要阻止，
+    		if(!event._constructed) return;
+    		
+    		console.log(index);
+    		let foodList = this.$refs.foodList;
+
+    		let el = foodList[index];
+
+    		this.foodsScroll.scrollToElement(el,10);
+
+    	},
+    	// 初始化 better-scroll
+    	_initScroll() {
+    		this.menuScroll = new BScroll(this.$refs.menuWrapper,{
+    			click:true        //默认派发点击事件
+    		});
+
+    		this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
+    			click:true,
+    			probeType:3   //实时侦测滚动
+    		});
+
+    		this.foodsScroll.on('scroll', (pos) => {
+    			// debugger
+    			this.scrollY = Math.abs(Math.round(pos.y));
+    		})
+    	},
+
+    	// 计算菜单栏元素
+    	_calculateHeight() {
+    		let foodList = this.$refs.foodList;
+
+	    	let height = 0;
+
+	    	this.listHeight.push(height);
+
+	    	for(let i=0; i<foodList.length; i++){
+	    		let item = foodList[i];
+
+	    		// 把foodlist列表中的每个元素的clientHeight(每一项的高度)的高度放到列表中
+	    		height += item.clientHeight;
+
+	    		this.listHeight.push(height);
+	    	}
+
+    	},
+
     }
 }
 </script>
@@ -85,7 +188,13 @@ export default {
 			background-color:#f3f5f7
 			padding:0 12px
 			line-height:14px
-			
+			&.current{
+				position: relative
+		        z-index: 10
+		        margin-top: -1px
+		        background: #fff
+		        font-weight: 700
+			}
 			.text{
 				// 垂直居中 table-cell vertical-align
 				display: table-cell;
@@ -186,6 +295,11 @@ export default {
 			            font-size: 10px
 			            color: rgb(147, 153, 159)
 		            }
+				}
+				.cart-wrapper{
+					position:absolute
+					right:0
+					bottom:12px
 				}
 			}
 		}
