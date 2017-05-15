@@ -89,6 +89,7 @@
         3. v-leave 定义离开过度的开始状态。在离开过渡被触发时生效，在下一帧移除
         4. v-leave-active 定义离开过渡的结束状态，在离开过渡被触发时生效，在下一帧被移除
 
+
         html:
         <transition name="move">
             <!-- 父元素用于控制小球 透明度变化 -->
@@ -97,6 +98,7 @@
                 <span class="inner icon-remove_circle_outline"></span>   
             </div>
         </transition>
+
 
         css：
         <!-- 小球enter之后最终结束时的状态 -->
