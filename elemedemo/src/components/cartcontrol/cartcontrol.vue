@@ -50,12 +50,12 @@ export default {
 <style lang="stylus" rel="stylesheet/stylus">
 .cartcontrol
 	font-size:0
-	// 动画最终状态
+	// 动画enter最终状态
 	.cart-decrease{
 		display: inline-block
         padding: 6px
         transition:all 0.4s linear
-        transform:translate3D(0,0,0)
+        transform:translate3d(0,0,0)
         opacity:1
         .inner{
         	display:inline-block
@@ -67,11 +67,13 @@ export default {
         	transform:rotate(0deg)	
         }
         
-        &.move-enter-active, &.move-leave-active{
-        	transition: all 0.4s linear
-        }
-        
+        // &.move-enter-active, &.move-leave-active{
+        // 	transition: all 0.4s linear
+        // }
+        // 动画enter的初始状态 和 leave 的最终状态
         &.move-enter, &.move-leave-active{
+        	transition: all 0.4s linear
+        	
         	opacity: 0
         	transform: translate3d(24px, 0, 0)
         	.inner{
