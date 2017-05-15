@@ -34,6 +34,9 @@ export default {
 			}else{
 				this.food.count++;
 			}
+
+			// 向父组件派发事件，并传递 当前dom元素
+			this.$emit('add',event.target);
 		},
 		decreaseCart() {
 			if(!event._constructed){

@@ -20,8 +20,21 @@
 			<div class="content-right">
 				<div class="pay" :class="payClass"> {{payDesc}} </div>
 			</div>
-
 		</div>
+
+		<!-- 小球动画 -->
+		<div class="ball-container">
+			<div v-for="ball in balls">
+				<!-- 过度钩子函数 -->
+				<transition name="drop" v-on:before-enter="beforeDrop" v-on:enter="dropping" v-on:after-enter="afterDrop">
+					<div class="ball" v-show="ball.show">
+						<div class="inner inner-hook"></div>
+					</div>
+				</transition>
+			</div>
+		</div>
+
+
 	</div>
 </template>
 <script>
@@ -49,9 +62,79 @@ export default {
       }
     },
 	data() {
-		return {}
+		return {
+			// 创建5个小球用于动画
+			balls:[
+				{show:false},
+				{show:false},
+				{show:false},
+				{show:false},
+				{show:false},
+			],
+			// 存储下落小球
+			dropBalls:[],
+			flod:true
+		}
 	},
-	methods: {},
+	methods: {
+		drop(el) {
+			// debugger
+			for(let i=0; i<this.balls.length; i++){
+				let ball = this.balls[i];
+				if(!ball.show){
+					// 只有改变元素显示隐藏状态才会触发 过度钩子函数
+					ball.show = true;
+					ball.el = el;
+					console.log(ball);
+					this.dropBalls.push(ball);
+					return;
+				}
+			}
+		},
+		beforeDrop(el) {
+			let count = this.balls.length;
+			while(count--){
+				let ball = this.balls[count];
+				if(ball.show){
+					let rect = ball.el.getBoundingClientRect();
+					let x = rect.left - 32;
+					let y = -(window.innerHeight - rect.top -22);
+					el.style.display = '';
+					//el和购物车icon在一起，将其初始位置放到加号位置去
+					el.style.webkitTransform = `translate3d(0,${y}px,0)`;
+					el.style.transform = `translate3d(0,${y}px,0)`;
+
+					// el.style.webkitTransform = `translate3d(0,${x}px,0)`;
+					// el.style.transform = `translate3d(0,${x}px,0)`;
+
+					let inner = el.getElementsByClassName('inner-hook')[0];
+					inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
+					inner.style.transform = `translate3d(${x}px,0,0)`;
+
+				}
+			}
+		},
+		dropping(el,done) {
+			let rf = el.offsetHeight;
+			this.$nextTick(() => {
+				el.style.webkitTransform = 'translate3d(0,0,0)';
+				el.style.transform = 'translate3d(0,0,0)';
+
+				let inner = el.getElementsByClassName('inner-hook')[0];
+				inner.style.webkitTransform = 'translate3d(0,0,0)';
+				inner.style.transform = 'translate3d(0,0,0)';
+
+				el.addEventListener("transitionend",done);
+			})
+		},
+		afterDrop(el) {
+			let ball = this.dropBalls.shift();
+			if(ball){
+				ball.show = false;
+				el.style.display="none";
+			}
+		}
+	},
 	computed:{
 		totalPrice() {
 			let total = 0;
@@ -192,6 +275,22 @@ export default {
 					background-color:#00b43c
 					color:#fff
 				}
+			}
+		}
+	}
+	.ball-container{
+		.ball{
+			position:fixed
+			left:32px
+			bottom:22px
+			z-index:200
+			transition:all 20s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+			.inner{
+				width:16px
+				height:16px
+				border-radius:50%
+				background-color:rgb(0,160,220)
+				transition:all 20s linear
 			}
 		}
 	}

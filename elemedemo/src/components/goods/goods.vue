@@ -35,7 +35,8 @@
 
 		                  		<!-- cartcontrol组件 -->
 		                  		<div class="cart-wrapper">
-		                  			<cartcontrol :food="food"></cartcontrol>
+		                  			<!-- add自定义事件用于派发当前点击的dom元素，add为子组件方法，addFood为父组件方法 -->
+		                  			<cartcontrol :food="food" @add="addFood"></cartcontrol>
 		                  		</div>
 							</div>
 						</li>
@@ -44,7 +45,8 @@
 			</ul>
 		</div>	
 		<!-- 底部购物车 -->
-		<shopcar :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>	
+		<!-- 对组件来说 this.$refs.shopcart是一个对象，this.$refs.shopcart.$el获取dom元素  对普通元素来说是dom元素 -->
+		<shopcar ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>	
 	</div>
 </template>
 
@@ -161,6 +163,16 @@ export default {
 	    	}
 
     	},
+
+    	// 子组件派发而来的事件
+    	addFood(target) {
+    		// debugger
+    		this._drop(target);
+    	},
+    	_drop(target) {
+    		// debugger
+    		this.$refs.shopcart.drop(target);
+    	}
 
     }
 }
