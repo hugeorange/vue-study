@@ -110,7 +110,6 @@ export default {
 					let inner = el.getElementsByClassName('inner-hook')[0];
 					inner.style.webkitTransform = `translate3d(${x}px,0,0)`;
 					inner.style.transform = `translate3d(${x}px,0,0)`;
-
 				}
 			}
 		},

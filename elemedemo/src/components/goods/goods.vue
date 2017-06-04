@@ -164,13 +164,14 @@ export default {
 
     	},
 
-    	// 子组件派发而来的事件
+    	// 子组件$emit而来的事件
     	addFood(target) {
     		// debugger
     		this._drop(target);
     	},
     	_drop(target) {
     		// debugger
+    		// shopcar 组件绑定的 ref  ，
     		this.$refs.shopcart.drop(target);
     	}
 
