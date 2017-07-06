@@ -1,5 +1,39 @@
 ### 饿了么 vue 项目总结
 
+```
+每天记录进度:
+# 2017-05-09 项目启动
+# 2017-05-10 早上 添加静态资源文件，修改 build、dev-serve.js mock模拟数据，
+  添加 meta 标签
+  碰到 换台机器 报错-没有 modules ，暂时解决方法，删除整个 node_modules,然后重新 npm install
+
+# 2017-05-11
+	建立好 es6 书写， stylus书写方法，增加了tab导航栏，配置好了路由
+# 2017-05-12
+
+	学习了 1px 边框制作（不过感觉用处不大）
+	编写 stylus mixin 函数并在引用
+	(注意：引入外界stylus样式文件时：只能用 @import 在style标签里引用
+	且路径不可以在 webpack.base.conf.js alias别名)
+
+	全局通用样式，字体文件，图标文件
+	可以用统一在同级目录下用一个 index.styl
+	文件作为出口，在其内部 用 @import './minix.styl' 引入
+	然后在再 webpack.base.conf.js  统一配置 alias 别名
+	之后再在 main.js  引入这个 index.styl 文件 即可使用这些样式文件
+	如：import 'common/stylus/index.styl'
+
+	stylus 文件书写
+		1.尽量使用类 css 语法即 {}
+		2.尽量避免拷贝代码，产生多余的空格缩进问题
+
+# 2017-05-13
+	做完之后好好学习一下 flex 布局
+	display:flex  flex:1
+	完成 header 组件 ，goods组件 完成布局
+
+```
+
 > better-scroll
 
     better-scroll 实现列表滚动联动
@@ -120,6 +154,102 @@
                 transform:rotate(180deg);
             }
         }
+
+
+```
+2. 增加小球动画
+
+    实现过程：
+
+    1、小球最终的落点都是一致的，在左下角购物车按钮处
+
+    2、传递点击的 dom 对象
+        在 cartcontrol 组件里点击 + 时， 将点击的 dom 元素，通过通过 $emit 派发给父组件 goods.vue
+        this.$emit('add',event.target);
+        <div class="cart-wrapper">
+            <!-- add自定义事件用于派发当前点击的dom元素，add为子组件方法，addFood为父组件方法 -->
+            <cartcontrol :food="food" @add="addFood"></cartcontrol>
+        </div>
+        // 子组件$emit派发而来的事件
+        addFood(target) {
+            this._drop(target);  //传递 target
+        },
+        _drop(target) {
+            // 体验优化,异步执行下落动画
+            this.$nextTick(() => {
+            //调用 shopcar 组件中的 drop 方法，向 shopcar组件 传入当前点击的 dom 对象
+                this.$refs.shopcart.drop(target);
+            });
+        }
+
+    3.在 shopcar 组件里，创建 小球 dom 结构
+
+        <!-- 小球容器 -->
+        <div class="ball-container">
+            <div v-for="ball in balls">
+                <!-- 过度钩子函数 -->
+                <transition name="drop" v-on:before-enter="beforeDrop" v-on:enter="dropping" v-on:after-enter="afterDrop">
+                    <!--  外层纵向运动，内层横向运动-->
+                    <div class="ball" v-show="ball.show">
+                        <div class="inner inner-hook"></div>
+                    </div>
+                </transition>
+            </div>
+        </div>
+
+
+    4. 创建 一个小球数组，内置5个对象（5个小球，均有 show 属性，初始值为false）
+        一遍在多次快速点击时，屏幕出现多个小球
+        5个小球的初始位置 均在 左下角 购物车按钮处
+        创建一个 dropBalls 数组用于存储 处在下落过程中的小球
+        执行下落时 将 父组件传递过来的 dom 对象 当做一个属性 给 ball，方便 在下面的方法中计算 ball 的位置
+        data() {
+            return {
+                // 创建5个小球用于动画
+                balls:[{show:false},{show:false},{show:false},{show:false},{show:false}],
+                dropBalls:[], // 存储下落小球
+            }
+    	},
+    5.执行 v-on:before-enter="beforeDrop"  过度前钩子函数
+        设置 ball 初始位置，计算处 初始位置与目标位置的 差值 x,y ，将小球 transform ：translate（x,y,x）到动画初始位置
+
+    6.执行 v-on:enter="dropping"  过度中钩子函数
+        手动触发浏览器重绘，将 ball 通过 transform ：translate（0，0，0） 移动到目标位置
+
+    7. 执行 v-on:after-enter="afterDrop"  过度结束钩子函数
+        从存储下落小球的数组里 unshift 当前小球
+        并将当前小球 display:none; show:false
+
+    8.样式
+    .ball-container{
+        //外层 做纵向运动
+        .ball{
+            position:fixed
+            left:32px
+            bottom:22px
+            z-index:200
+            //y 轴 贝塞尔曲线
+            transition:all 2s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+            //内从做横向运动
+            .inner{
+                width:16px
+                height:16px
+                border-radius:50%
+                background-color:rgb(0,160,220)
+                //x 轴只需要线性缓动
+                transition:all 2s linear
+            }
+        }
+
+```
+
+
+
+
+
+
+
+
 
 
 

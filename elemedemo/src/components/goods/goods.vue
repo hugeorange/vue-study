@@ -43,10 +43,10 @@
 					</ul>
 				</li>
 			</ul>
-		</div>	
+		</div>
 		<!-- 底部购物车 -->
 		<!-- 对组件来说 this.$refs.shopcart是一个对象，this.$refs.shopcart.$el获取dom元素  对普通元素来说是dom元素 -->
-		<shopcar ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>	
+		<shopcar ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>
 	</div>
 </template>
 
@@ -58,6 +58,7 @@ import cartcontrol from '../../components/cartcontrol/cartcontrol'
 
 export default {
 	props:['seller'],
+	//注册组件，然后才可以在模板里使用
 	components: {
 		shopcar,
 		cartcontrol
@@ -76,13 +77,13 @@ export default {
         // 创建完成 vue 实例后即请求接口，将值赋给 seller，继而通过 props将获得值传给子组件
         this.$http.get('./api/goods').then((response) => {
             console.log(response.data.data);
-           
+
             this.goods = response.data.data;
             this.$nextTick(() => {
             	this._initScroll();
             	this._calculateHeight();
             })
-            
+
         });
     },
     computed: {
@@ -119,7 +120,7 @@ export default {
     	selectMenu(index) {
     		// 因为有自动派发事件，所以需要阻止，
     		if(!event._constructed) return;
-    		
+
     		console.log(index);
     		let foodList = this.$refs.foodList;
 
@@ -164,15 +165,27 @@ export default {
 
     	},
 
-    	// 子组件$emit而来的事件
+    	// 子组件$emit派发而来的事件
     	addFood(target) {
     		// debugger
+			console.log(target);
     		this._drop(target);
+
     	},
+		//_drop 方法 传入点击的 dom 对象
     	_drop(target) {
     		// debugger
     		// shopcar 组件绑定的 ref  ，
-    		this.$refs.shopcart.drop(target);
+//			console.log(this.$refs.shopcart.drop);
+
+			//调用 shopcar 组件中的 drop 方法，向其传入当前点击的 dom 对象
+//    		this.$refs.shopcart.drop(target);
+
+			
+			// 体验优化,异步执行下落动画
+			this.$nextTick(() => {
+				this.$refs.shopcart.drop(target);
+			});
     	}
 
     }
@@ -216,7 +229,7 @@ export default {
 			    position: relative;
 			    font-size: 12px;
 			    border-1px(rgba(7,17,27,0.1))
-			    
+
 			    .icon{
 					display:inline-block
 					vertical-align:top
@@ -226,7 +239,7 @@ export default {
 					margin-right:2px
 					background-size:12px 12px
 					background-repeat:no-repeat
-					
+
 					&.decrease{
 						bg-image('decrease_3')
 					}
@@ -244,11 +257,11 @@ export default {
 					}
 				}
 			}
-			
-			
+
+
 		}
 	}
-	
+
 	.foods-wrapper{
 		flex:1
 		.title{
@@ -282,7 +295,7 @@ export default {
 					font-size:14px
 				}
 				.desc{
-					font-size:10px 
+					font-size:10px
 					line-height:10px
 					color:rgb(147,153,159)
 					margin-bottom:8px

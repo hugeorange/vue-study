@@ -1,3 +1,4 @@
+# Created by .ignore support plugin (hsz.mobi)
 .DS_Store
 node_modules/
 dist/
@@ -10,3 +11,4 @@ yarn-error.log*
 *.tmp
 *.err
 *.idea
+

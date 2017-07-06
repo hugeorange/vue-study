@@ -5,32 +5,33 @@
 			<div class="cart-decrease" v-show="food.count>0" @click="decreaseCart">
 				 <span class="inner icon-remove_circle_outline"></span>
 			</div>
-		</transition>	
-		
+		</transition>
+		<!--商品数量-->
 		<div class="cart-count"  v-show="food.count>0">{{food.count}}</div>
+		<!--增加按钮-->
 		<div class="cart-add icon-add_circle" @click="addCart"></div>
 
 	</div>
 </template>
 <script>
-import Vue from 'vue'
+//import Vue from 'vue'
 export default {
 	props:['food'],
 	data() {
-		return {
-
-		}
+		return {}
 	},
 	created() {
 		// console.log(this.food);
 	},
 	methods:{
 		addCart(event) {
+		    //阻止pc 端，点击事件执行多次，（不是自己派发的事件，return）
 			if(!event._constructed){
 				return;
 			}
 			if(!this.food.count){
-				Vue.set(this.food,'count',1);
+//				Vue.set(this.food,'count',1);
+				this.$set(this.food,'count',1);
 			}else{
 				this.food.count++;
 			}
@@ -67,22 +68,22 @@ export default {
         	line-height:24px
         	color: rgb(0, 160, 220)
         	transition:all 0.4s linear
-        	transform:rotate(0deg)	
+        	transform:rotate(0deg)
         }
-        
+
         // &.move-enter-active, &.move-leave-active{
         // 	transition: all 0.4s linear
         // }
         // 动画enter的初始状态 和 leave 的最终状态
         &.move-enter, &.move-leave-active{
         	transition: all 0.4s linear
-        	
+
         	opacity: 0
         	transform: translate3d(24px, 0, 0)
         	.inner{
           		transform: rotate(180deg)
         	}
-        }	
+        }
 	}
 	.cart-count{
 		display: inline-block
