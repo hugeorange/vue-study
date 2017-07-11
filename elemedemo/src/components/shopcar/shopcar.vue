@@ -1,9 +1,9 @@
 <template>
 	<div class="shopcar">
-		<div class="content" @click="toggleList">
+		<div class="content">
 			<div class="content-left">
 
-				<div class="logo-wrapper">
+				<div class="logo-wrapper" @click="toggleList">
 					<div class="logo" :class="{'highlight':totalCount>0}">
 						<i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
 					</div>
@@ -40,7 +40,7 @@
 			<div class="shopcar-list" v-show="listShow">
 				<div class="list-header">
 					<h1 class="title">购物车</h1>
-					<span class="empty">清空</span>
+					<span class="empty" @click="empty">清空</span>
 				</div>
 				<div class="list-content" ref="listContent">
 					<ul ref="shopList">
@@ -183,6 +183,15 @@
 			}
 			this.fold = !this.fold;
 		    console.log(this.fold);
+		},
+
+		//清空购物车数据
+		empty(){
+			console.log(222);
+			this.selectFoods.forEach((item) => {
+				console.log(item);
+				item.count = 0;
+			})
 		}
 	},
 	computed:{
