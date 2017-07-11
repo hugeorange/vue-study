@@ -26,6 +26,7 @@ export default {
 	methods:{
 		addCart(event) {
 		    //阻止pc 端，点击事件执行多次，（不是自己派发的事件，return）
+			//点击事件是靠 better-scroll 派发的
 			if(!event._constructed){
 				return;
 			}
@@ -91,7 +92,6 @@ export default {
 		text-align:center
 		width:12px
 		line-height: 24px
-		font-size:24px
         padding-top: 6px
         font-size: 10px
         color: rgb(147, 153, 159)

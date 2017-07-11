@@ -1,6 +1,6 @@
 <template>
 	<div class="shopcar">
-		<div class="content">
+		<div class="content" @click="toggleList">
 			<div class="content-left">
 
 				<div class="logo-wrapper">
@@ -35,11 +35,36 @@
 			</div>
 		</div>
 
+		<!--底部购物车详情-->
+		<transition name="fold">
+			<div class="shopcar-list" v-show="listShow">
+				<div class="list-header">
+					<h1 class="title">购物车</h1>
+					<span class="empty">清空</span>
+				</div>
+				<div class="list-content" ref="listContent">
+					<ul ref="shopList">
+						<li class="food" v-for="(item,index) in selectFoods">
+							<span class="name">{{item.name}}</span>
+							<div class="price">
+								<span>￥{{item.price*item.count}}</span>
+							</div>
+							<!--引入 cartcontrol 组件 -->
+							<div class="cartcontrol-wrapper">
+								<cartcontrol :food="item"></cartcontrol>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</transition>
 
 	</div>
 </template>
 <script>
-export default {
+	import BScroll from 'better-scroll'
+	import cartcontrol from '../../components/cartcontrol/cartcontrol'
+	export default {
 	// props:['selectFoods','deliveryPrice','minPrice'],
 	props: {
 	    //goods组件，传递过来的选择的商品数组
@@ -63,6 +88,9 @@ export default {
         default: 0
       }
     },
+	components:{
+	    cartcontrol
+	},
 	data() {
 		return {
 			// 创建5个小球用于动画
@@ -75,7 +103,8 @@ export default {
 			],
 			// 存储下落小球
 			dropBalls:[],
-			flod:true
+			//折叠状态
+			fold:true
 		}
 	},
 	methods: {
@@ -144,6 +173,16 @@ export default {
 				ball.show = false;
 				el.style.display = "none";
 			}
+		},
+
+		//折叠购物车列表
+		toggleList(){
+		    console.log(111);
+		    if(!this.totalCount){
+		        return;
+			}
+			this.fold = !this.fold;
+		    console.log(this.fold);
 		}
 	},
 	computed:{
@@ -179,6 +218,29 @@ export default {
 			}else{
 				return 'enough';
 			}
+		},
+		//空着购物车列表显示隐藏,data 里面的 fold 值一变化，computed 计算属性里的 listShow 方法便会被触发
+		listShow() {
+		    console.log('list-show');
+		    if(!this.totalCount){
+				this.fold = true;
+				return false;
+			}
+			let show = !this.fold;
+		    console.log(show);
+			if (show) {
+				this.$nextTick(() => {
+					if (!this.scroll) {
+						this.scroll = new BScroll(this.$refs.listContent, {
+							click: true
+						});
+					} else {
+						this.scroll.refresh();
+					}
+				});
+			}
+
+			return show;
 		}
 	}
 }
@@ -298,15 +360,83 @@ export default {
 			bottom:22px
 			z-index:200
 			//y 轴 贝塞尔曲线
-			transition:all 2s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+			transition:all 0.5s cubic-bezier(0.49, -0.29, 0.75, 0.41)
 			.inner{
 				width:16px
 				height:16px
 				border-radius:50%
 				background-color:rgb(0,160,220)
 				//x 轴只需要线性缓动
-				transition:all 2s linear
+				transition:all 0.5s linear
 			}
+		}
+	}
+	.shopcar-list{
+		position absolute
+		left:0
+		right:0
+		top:0
+		width:100%
+		z-index :-1
+
+		transform :translate3d(0,-100%,0)
+		&.fold-enter-active, &.fold-leave-active{
+			transition :all 0.4s linear
+		}
+		&.fold-enter, &.fold-leave-active{
+			transform :translate3d(0,0,0)
+		}
+
+
+
+		.list-header {
+			height: 40px
+			line-height: 40px
+			padding: 0 18px
+			background: #f3f5f7
+			border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+			.title {
+				float: left
+				font-size: 14px
+				color: rgb(7, 17, 27)
+			}
+			.empty {
+				float: right
+				font-size: 12px
+				color: rgb(0, 160, 220)
+			}
+		}
+		.list-content{
+			padding:0 18px
+			max-height :217px
+			overflow :hidden
+			background :#fff
+			.food{
+				position :relative
+				padding :12px 0
+				box-sizing :border-box
+				border-1px:rgba(7,17,27,0.1)
+				.name {
+					line-height: 24px
+					font-size: 14px
+					color: rgb(7, 17, 27)
+				}
+				.price {
+					position: absolute
+					right: 90px
+					bottom: 12px
+					line-height: 24px
+					font-size: 14px
+					font-weight: 700
+					color: rgb(240, 20, 20)
+				}
+				.cartcontrol-wrapper {
+					position: absolute
+					right: 0
+					bottom: 6px
+				}
+			}
+
 		}
 	}
 </style>
