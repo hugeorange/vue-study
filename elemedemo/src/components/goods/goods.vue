@@ -14,7 +14,7 @@
 		<!-- 右侧商品详情 -->
 		<div class="foods-wrapper" ref="foodsWrapper">
 			<ul>
-				<li v-for="(item,index) in goods" class="food-list" ref="foodList">
+				<li v-for="(item,index) in goods" class="food-list" @click="seeFood(item,$event)" ref="foodList">
 					<h1 class="title">{{item.name}}</h1>
 					<ul>
 						<li v-for="(food,index) in item.foods" class="food-item border-1px">
@@ -47,6 +47,9 @@
 		<!-- 底部购物车 -->
 		<!-- 对组件来说 this.$refs.shopcart是一个对象，this.$refs.shopcart.$el获取dom元素  对普通元素来说是dom元素 -->
 		<shopcar ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>
+
+		<!--商品详情 food 组件-->
+		<food :food="seeFoodinfo" ref="food"></food>
 	</div>
 </template>
 
@@ -55,19 +58,22 @@
 import BScroll from 'better-scroll'
 import shopcar from '../../components/shopcar/shopcar'
 import cartcontrol from '../../components/cartcontrol/cartcontrol'
+import food from '../../components/food/food'
 
 export default {
 	props:['seller'],
 	//注册组件，然后才可以在模板里使用
 	components: {
 		shopcar,
-		cartcontrol
+		cartcontrol,
+		food
 	},
 	data() {
 		return {
 			goods:[],          //商品信息
 			listHeight:[],     //菜单列表元素
 			scrollY:0,         //食物列表滚动的高度实时计算
+			seeFoodinfo:{}	   //选中的商品用以查看商品详情
 		}
 	},
 	created() {
@@ -174,20 +180,21 @@ export default {
     	},
 		//_drop 方法 传入点击的 dom 对象
     	_drop(target) {
-    		// debugger
-    		// shopcar 组件绑定的 ref  ，
-//			console.log(this.$refs.shopcart.drop);
-
 			//调用 shopcar 组件中的 drop 方法，向其传入当前点击的 dom 对象
 //    		this.$refs.shopcart.drop(target);
-
-			
 			// 体验优化,异步执行下落动画
 			this.$nextTick(() => {
 				this.$refs.shopcart.drop(target);
 			});
-    	}
+    	},
 
+    	//查看商品详情
+		seeFood(food,event){
+    	    if(!event._constructed) return;
+			this.seeFoodinfo = food;
+			//调用子组件的 food show 方法
+			this.$refs.food.show();
+		}
     }
 }
 </script>

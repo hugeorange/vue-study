@@ -1,64 +1,70 @@
 <template>
-	<div class="shopcar">
-		<div class="content">
-			<div class="content-left">
+	<div>
+		<div class="shopcar">
+			<div class="content">
+				<div class="content-left">
 
-				<div class="logo-wrapper" @click="toggleList">
-					<div class="logo" :class="{'highlight':totalCount>0}">
-						<i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
+					<div class="logo-wrapper" @click="toggleList">
+						<div class="logo" :class="{'highlight':totalCount>0}">
+							<i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
+						</div>
+						<div class="num" v-show="totalCount>0">{{totalCount}}</div>
 					</div>
-					<div class="num" v-show="totalCount>0">{{totalCount}}</div>
+
+
+					<div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
+
+					<div class="desc">另需配送费￥{{deliveryPrice}}</div>
+
 				</div>
 
-
-				<div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
-
-				<div class="desc">另需配送费￥{{deliveryPrice}}</div>
-
+				<div class="content-right">
+					<div class="pay" :class="payClass" @click="pay"> {{payDesc}} </div>
+				</div>
 			</div>
 
-			<div class="content-right">
-				<div class="pay" :class="payClass"> {{payDesc}} </div>
+			<!-- 小球动画 -->
+			<div class="ball-container">
+				<div v-for="ball in balls">
+					<!-- 过度钩子函数 -->
+					<!--<transition name="drop" v-on:before-enter="beforeDrop" v-on:enter="dropping" v-on:after-enter="afterDrop">-->
+					<transition v-on:before-enter="beforeDrop" v-on:enter="dropping" v-on:after-enter="afterDrop">
+						<div class="ball" v-show="ball.show">
+							<div class="inner inner-hook"></div>
+						</div>
+					</transition>
+				</div>
 			</div>
-		</div>
 
-		<!-- 小球动画 -->
-		<div class="ball-container">
-			<div v-for="ball in balls">
-				<!-- 过度钩子函数 -->
-				<!--<transition name="drop" v-on:before-enter="beforeDrop" v-on:enter="dropping" v-on:after-enter="afterDrop">-->
-				<transition v-on:before-enter="beforeDrop" v-on:enter="dropping" v-on:after-enter="afterDrop">
-					<div class="ball" v-show="ball.show">
-						<div class="inner inner-hook"></div>
+			<!--底部购物车详情-->
+			<transition name="fold">
+				<div class="shopcar-list" v-show="listShow">
+					<div class="list-header">
+						<h1 class="title">购物车</h1>
+						<span class="empty" @click="empty">清空</span>
 					</div>
-				</transition>
-			</div>
-		</div>
+					<div class="list-content" ref="listContent">
+						<ul ref="shopList">
+							<li class="food" v-for="(item,index) in selectFoods">
+								<span class="name">{{item.name}}</span>
+								<div class="price">
+									<span>￥{{item.price*item.count}}</span>
+								</div>
+								<!--引入 cartcontrol 组件 -->
+								<div class="cartcontrol-wrapper">
+									<cartcontrol @add="addFood" :food="item"></cartcontrol>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</transition>
 
-		<!--底部购物车详情-->
-		<transition name="fold">
-			<div class="shopcar-list" v-show="listShow">
-				<div class="list-header">
-					<h1 class="title">购物车</h1>
-					<span class="empty" @click="empty">清空</span>
-				</div>
-				<div class="list-content" ref="listContent">
-					<ul ref="shopList">
-						<li class="food" v-for="(item,index) in selectFoods">
-							<span class="name">{{item.name}}</span>
-							<div class="price">
-								<span>￥{{item.price*item.count}}</span>
-							</div>
-							<!--引入 cartcontrol 组件 -->
-							<div class="cartcontrol-wrapper">
-								<cartcontrol :food="item"></cartcontrol>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
+		</div>
+		<!--列表背后的蒙版-->
+		<transition name="fade">
+			<div class="list-mask" v-show="listShow" @click="hideList"></div>
 		</transition>
-
 	</div>
 </template>
 <script>
@@ -192,7 +198,25 @@
 				console.log(item);
 				item.count = 0;
 			})
+		},
+
+		//点击阴影背景收起购物车列表
+		hideList(){
+		    this.fold = !this.fold;
+		},
+		//增加小球动画
+		addFood(target){
+		    this.drop(target);
+		},
+
+		//去支付
+		pay(){
+		    if(this.totalPrice < this.minPrice){
+		        return;
+			}
+			window.alert(`需支付${this.totalPrice}元`);
 		}
+
 	},
 	computed:{
 	    //所有状态都是根据 selectFoods
@@ -237,8 +261,10 @@
 			}
 			let show = !this.fold;
 		    console.log(show);
+		    //列表展示时初始化时better-scroll
 			if (show) {
 				this.$nextTick(() => {
+				    //不存在 better-scroll，进行初始化，存在即调用 refresh方法
 					if (!this.scroll) {
 						this.scroll = new BScroll(this.$refs.listContent, {
 							click: true
@@ -395,9 +421,6 @@
 		&.fold-enter, &.fold-leave-active{
 			transform :translate3d(0,0,0)
 		}
-
-
-
 		.list-header {
 			height: 40px
 			line-height: 40px
@@ -447,5 +470,22 @@
 			}
 
 		}
+	}
+.list-mask
+	position fixed;
+	left:0;
+	right:0;
+	top:0;
+	bottom 0;
+	-webkit-backdrop-filter :blur(10px)
+	background-color :rgba(7,17,27,0.6)
+	//进入时动画
+	&.fade-enter-active,&.fade-leave{
+		transition :all 0.5s
+	}
+	//离开时动画
+	&.fade-enter,&.fade-leave-active{
+		opacity :0
+		background-color :rgba(7,17,27,0)
 	}
 </style>

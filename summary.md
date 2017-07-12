@@ -243,7 +243,30 @@
 
 ```
 
+> 购物车列表的显示隐藏状态
+    ```
+        按钮控制 fold => fold 控制 => listShow ， listShow => 控制状态显示 (在totalCount>0)
+        在 data 选项里，定义一个 fold（折叠，true） 控制购物车的显示隐藏状态
+        在 computed 计算属性里，定义一个 listshow 方法，来表示购物车列表的显示隐藏状态
 
+        listShow() {
+            if(!this.totalCount){  //假如所选商品为 0 ，return 掉结果，并将 fold 置为初始值
+                this.fold = true;
+                return false;
+            }
+            let show = !this.fold; // 否则，取 fold 的反值，靠 fold 的变化来 决定 列表显示与否
+            return show;
+        }
+
+        在 method 方法里有个 toggleList 方法控制 fold 状态
+        toggleList(){
+            if(!this.totalCount){
+                return;
+            }
+            this.fold = !this.fold;
+        },
+
+    ```
 
 
 
