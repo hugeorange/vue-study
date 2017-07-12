@@ -14,10 +14,10 @@
 		<!-- 右侧商品详情 -->
 		<div class="foods-wrapper" ref="foodsWrapper">
 			<ul>
-				<li v-for="(item,index) in goods" class="food-list" @click="seeFood(item,$event)" ref="foodList">
+				<li v-for="(item,index) in goods" class="food-list" ref="foodList">
 					<h1 class="title">{{item.name}}</h1>
 					<ul>
-						<li v-for="(food,index) in item.foods" class="food-item border-1px">
+						<li v-for="(food,index) in item.foods" class="food-item border-1px" @click="seeFood(food,$event)">
 							<div class="icon">
 								<img width="57" height="57" :src="food.icon">
 							</div>
