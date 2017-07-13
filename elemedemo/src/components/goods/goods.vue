@@ -49,7 +49,7 @@
 		<shopcar ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice":minPrice="seller.minPrice"></shopcar>
 
 		<!--商品详情 food 组件-->
-		<food :food="seeFoodinfo" ref="food"></food>
+		<food @add="addFood" :food="seeFoodinfo" ref="food"></food>
 	</div>
 </template>
 
@@ -173,7 +173,7 @@ export default {
 
     	// 子组件$emit派发而来的事件
     	addFood(target) {
-    		// debugger
+//    		 debugger
 			console.log(target);
     		this._drop(target);
 

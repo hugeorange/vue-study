@@ -32,11 +32,16 @@
           <p class="text">{{food.info}}</p>
         </div>
         <split></split>
+
         <div class="rating">
           <h1 class="title">商品评价</h1>
+
           <ratingselect @select="selectRating" @toggle="toggleContent" :selectType="selectType"
                         :onlyContent="onlyContent" :desc="desc"
-                        :ratings="food.ratings"></ratingselect>
+                        :ratings="food.ratings">
+
+		  </ratingselect>
+
           <div class="rating-wrapper">
             <ul v-show="food.ratings && food.ratings.length">
               <li v-show="needShow(rating.rateType,rating.text)" v-for="rating in food.ratings"
