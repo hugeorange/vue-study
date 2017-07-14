@@ -49,7 +49,14 @@
 				<!--评价内容-->
 				<div class="rating">
 					<h1 class="title">商品评价</h1>
-
+					<ratingselect
+						@select="selectRating"
+						@onlyContent="onlyContent"
+						:ratings="food.ratings"
+						:selectType="selectType"
+						:onlyContent="onlyContent"
+						:desc="desc"
+					></ratingselect>
 				</div>
 			</div>
 		</div>
@@ -60,18 +67,32 @@
 <script>
 	import cartcontrol from '../../components/cartcontrol/cartcontrol'
 	import split from '../../components/split/split'
+	import ratingselect from '../../components/ratingselect/ratingselect'
 	import Bscroll from 'better-scroll'
+
+	const Positive = 0;
+	const Negative = 1;
+	const All = 2;
+
 	export default {
 	    //父子组件通过 props 传值时，如果子组件 没有显示出来 ，即子组件 拿不到父组件的值
 		props:['food'],
 		//注册组件，然后才可以在模板里使用
 		components: {
 			cartcontrol,
-			split
+			split,
+			ratingselect
 		},
 		data() {
 			return {
-				showFlag:false
+				showFlag:false,
+				selectType:All,
+				onlyContent:true,
+				desc:{
+				    all:'全部',
+					positive:'推荐',
+					negative:'吐槽'
+				}
 			}
 		},
 		created() {},
@@ -81,14 +102,16 @@
 		    //可被外部调用的方法，正常命名，不可被外部调用的方法 以 _ 开头
 		    show() {
 		        this.showFlag = true;
+				this.selectType = All;
+				this.onlyContent = true;
 		        this.$nextTick(() => {
 		            if(!this.scroll){
-		                this.scroll = new Bscroll(this.$refs.foodcontent,{
+		                window.test  = this.scroll = new Bscroll(this.$refs.foodcontent,{
 		                    click:true
 						})
-					}else{
-		                this.scroll && this.scroll.refresh();
 					}
+
+					this.scroll && this.scroll.refresh();
 				})
 			},
 			hide(){
@@ -103,6 +126,21 @@
 			    if(!event._constructed) return;
 				this.$emit('add', event.target);
 			    this.$set(this.food,'count',1);
+			},
+
+			//子组件选择评价类别 向父组件传递的 type 值
+			selectRating(type){
+			    this.selectType = type;
+			    this.$nextTick(()=> {
+					this.scroll.refresh();
+				})
+			},
+			onlyContent(onlyContent){
+			    debugger
+			    this.onlyContent = onlyContent;
+				this.$nextTick(()=> {
+					this.scroll.refresh();
+				})
 			}
 		},
 	}
@@ -140,6 +178,7 @@
 		// 商品详情
 		.food-content{
 			// 此处为什么要选择注释里这样布局？ ==>因为，防止网络情况不好时，图片加载太慢，无法第一时间撑开高度，导致底部内容跑道上面来
+			padding-bottom :100px
 			.image-header{
 				position:relative
 				// width:100%
@@ -239,6 +278,16 @@
 					padding: 0 8px
 					font-size: 12px
 					color: rgb(77, 85, 93)
+				}
+			}
+			//评价样式
+			.rating{
+				padding-top :18px;
+				.title{
+					line-height: 14px
+					margin-left: 6px
+					font-size: 14px
+					color: rgb(7, 17, 27)
 				}
 			}
 		}

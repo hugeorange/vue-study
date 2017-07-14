@@ -7,4 +7,4 @@
 ```		
 跟着慕课网黄轶老师  敲饿了么 vue 项目
 ```
-[项目源代码地址] (https://github.com/ustbhuangyi/vue-sell)
+[项目源代码地址](https://github.com/ustbhuangyi/vue-sell)
