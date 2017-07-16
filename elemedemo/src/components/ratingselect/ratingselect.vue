@@ -28,7 +28,7 @@
 			selectType:{
 	            type:Number,
 				default(){
-	                return 3;
+	                return All;
 				}
 			},
 			onlyContent:{
@@ -73,7 +73,8 @@
 	            if(!event._constructed){
 	                return;
 				}
-	            this.$emit('toggleContent')
+				//向父组件 发送数据，通过 $emit ('xxx',arguments);  父组件： @xxx = '父组件自己的方法aaa'  在 父组件  methods 里调用 aaa(arguments) 接受参数
+	            this.$emit('onlyContent',this.onlyContent);
 			}
 		}
 	}

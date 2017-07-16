@@ -3,29 +3,36 @@
         <v-header :seller="seller"></v-header>
         <div class="tab border-1px">
         	<div class="tab-item">
-                <router-link to="/goods">商品</router-link>   
+                <router-link to="/goods">商品</router-link>
             </div>
             <div class="tab-item">
-                <router-link to="/ratings">评论</router-link>   
+                <router-link to="/ratings">评论</router-link>
             </div>
             <div class="tab-item">
-                <router-link to="/seller">商家</router-link>   
+                <router-link to="/seller">商家</router-link>
             </div>
 
         </div>
         <!-- 路由外链 -->
         <div>
-            <router-view :seller="seller"></router-view>            
+            <router-view :seller="seller"></router-view>
         </div>
     </div>
 </template>
 
-<script >
+<script type="text/ecmascript-6">
 import header from './components/header/header.vue'
+import {urlParse} from 'common/js/utils'
+
 export default {
     data() {
         return {
-            seller:{}
+            seller:{
+                id:(() => {
+                    let queryParam = urlParse();
+                    return queryParam.id;
+				})()
+			}
         }
     },
     components:{
@@ -33,12 +40,15 @@ export default {
     },
     created() {
         // 创建完成 vue 实例后即请求接口，将值赋给 seller，继而通过 props将获得值传给子组件
-        this.$http.get('./api/seller').then((response) => {
-            console.log(response.data.data);
-           
-            this.seller = response.data.data;
-            
-        })
+        this.$http.get('./api/seller?id=' + this.seller.id).then((response) => {
+//            this.seller = response.data.data;
+			console.log(response.data.data);
+			if(response.data.errno === 0){
+				this.seller = Object.assign({}, this.seller, response.data.data);
+//				this.seller = response.data.data;
+				console.log(this.seller.id);
+			}
+        });
     }
 }
 </script>
@@ -55,7 +65,7 @@ export default {
     // text-align: center;
     color: #2c3e50;
 }
-#app 
+#app
     .tab
         display:flex
         width:100%
@@ -63,7 +73,7 @@ export default {
         line-height:40px
         // border-bottom:1px solid rgba(7,17,27,0.1)
         border-1px(rgba(7,17,27,0.1))
-        
+
         .tab-item
             flex:1
             text-align:center

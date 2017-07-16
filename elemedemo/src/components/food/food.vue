@@ -51,12 +51,31 @@
 					<h1 class="title">商品评价</h1>
 					<ratingselect
 						@select="selectRating"
-						@onlyContent="onlyContent"
+						@onlyContent="toggleContent"
 						:ratings="food.ratings"
 						:selectType="selectType"
 						:onlyContent="onlyContent"
 						:desc="desc"
 					></ratingselect>
+
+					<!--评价列表-->
+					<div class="rating-wrapper">
+						<ul v-show="food.ratings && food.ratings.length">
+							<li v-show="needShow(rating.rateType,rating.text)"  class="rating-item" v-for="rating in food.ratings">
+								<!--自定义过滤器 日期格式化-->
+								<div class="time">{{rating.rateTime | formatDate}}</div>
+								<div class="user">
+									<span class="name">{{rating.username}}</span>
+									<img width="12" height="12" :src="rating.avatar" alt="">
+								</div>
+								<p class="text">
+									<span :class="{'icon-thumb_up':rating.rateType===0,'icon-thumb_down':rating.rateType===1}"></span>
+									{{rating.text}}
+								</p>
+							</li>
+						</ul>
+						<div class="no-ratings" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -69,6 +88,8 @@
 	import split from '../../components/split/split'
 	import ratingselect from '../../components/ratingselect/ratingselect'
 	import Bscroll from 'better-scroll'
+	//模块化编程 引入通用工具方法 common js utils.js 具体方法
+	import {formatDate} from 'common/js/utils';
 
 	const Positive = 0;
 	const Negative = 1;
@@ -96,17 +117,27 @@
 			}
 		},
 		created() {},
-		updated() {},
+		updated() {
+			this.scroll && this.scroll.refresh();
+		},
 		computed: {},
+		//过滤器方法
+		filters:{
+			formatDate(time){
+			    let date = new Date(time);
+			    return formatDate(date,'yyyy-MM-dd hh:mm');
+			}
+		},
 		methods: {
 		    //可被外部调用的方法，正常命名，不可被外部调用的方法 以 _ 开头
 		    show() {
 		        this.showFlag = true;
 				this.selectType = All;
-				this.onlyContent = true;
-		        this.$nextTick(() => {
+				this.onlyContent = false;
+
+		        this.$nextTick( () => {
 		            if(!this.scroll){
-		                window.test  = this.scroll = new Bscroll(this.$refs.foodcontent,{
+		                this.scroll = new Bscroll(this.$refs.foodcontent,{
 		                    click:true
 						})
 					}
@@ -135,14 +166,25 @@
 					this.scroll.refresh();
 				})
 			},
-			onlyContent(onlyContent){
-			    debugger
-			    this.onlyContent = onlyContent;
+			toggleContent(onlyContent){
+			    var self = this;
+			    this.onlyContent = !onlyContent;
+
 				this.$nextTick(()=> {
 					this.scroll.refresh();
 				})
+			},
+			needShow(type,text){
+				if (this.onlyContent && !text) {
+					return false;
+				}
+				if (this.selectType === All) {
+					return true;
+				} else {
+					return type === this.selectType;
+				}
 			}
-		},
+		}
 	}
 </script>
 
@@ -288,6 +330,52 @@
 					margin-left: 6px
 					font-size: 14px
 					color: rgb(7, 17, 27)
+				}
+				.rating-wrapper{
+					padding :0 18px
+					.rating-item{
+						position :relative
+						padding :16px 0
+						border-1px(rgba(7,17,27,0.1))
+						.user{
+							position: absolute;
+							right: 0;
+							line-height :12px
+							img {
+								border-radius: 50%
+								margin-left: 6px
+							}
+						}
+						.time{
+							margin-bottom :6px
+							font-size :10px
+							color :rgb(147,153,159)
+							line-height :12px
+						}
+						.text{
+							color:rgb(7,17,27)
+							font-size :12px
+							line-height :12px
+							vertical-align :top
+							.icon-thumb_up,.icon-thumb_down{
+								margin-right :4px
+								font-size :12px
+								line-height :24px
+							}
+							.icon-thumb_up{
+								color :rgb(0,160,220)
+							}
+							.icon-thumb_down{
+								color :rgb(147,153,159)
+							}
+						}
+					}
+					.no-ratings{
+						color: rgb(147, 158, 159)
+						font-size :16px
+						text-align :center
+						margin-top: 10px;
+					}
 				}
 			}
 		}

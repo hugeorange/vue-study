@@ -116,7 +116,7 @@ export default {
     				}
     			})
     		});
-    		console.log(foods);
+//    		console.log(foods);
     		return foods;
     	}
 
