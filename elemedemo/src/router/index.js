@@ -6,7 +6,7 @@ import seller from '@/components/seller/seller'
 
 
 // console.log(goods);
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [

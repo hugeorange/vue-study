@@ -41,7 +41,7 @@
 		<div class="background">
 			<img :src="seller.avatar" width="100%" height="100%" alt="">
 		</div>
-		
+
 		<!-- 弹框细节 transition -->
 		<transition name="fade">
 			<div class="detail" v-show="detailShow">
@@ -113,6 +113,7 @@ export default {
 		star:star
 	},
 	created() {
+	    console.log(this.seller);
 		this.classMap = ['decrease','discount','guarantee','invoice','special']
 	},
 	mounted() {
@@ -141,7 +142,7 @@ export default {
 			display:inline-block
 			margin-left:16px;
 			font-size:14px
-		
+
 			.title
 				margin:2px 0 8px 0
 				.brand
@@ -157,15 +158,15 @@ export default {
 					font-size:16px
 					font-weight:bold
 					line-height:8px
-			
-				
+
+
 			.description
 				margin-bottom:10px
 	            line-height:12px
 	            font-size:12px
-        	
+
         	.support{
-        		
+
 				.icon{
 					display: inline-block
 		            vertical-align: top
@@ -204,7 +205,7 @@ export default {
         		line-height:24px
         		border-radius:14px
         		background-color:rgba(0,0,0,0.2)
-        		text-align:center 
+        		text-align:center
         		.count{
         			vertical-align:top
         			font-size:10px
@@ -224,7 +225,7 @@ export default {
 		overflow:hidden
 		text-overflow:ellipsis
 		background-color:rgba(7,17,27,0.2)
-		
+
 		.bulletin-title{
 			display:inline-block
 			vertical-align:top
@@ -268,7 +269,7 @@ export default {
 		// 元素超出容器产生滚动条
 		overflow:auto
 		background-color:rgba(7,17,27,0.8)
-		
+
 		// 给其父集添加类
 		&.fade-enter-active, &.fade-leave-active{
 			transition:all 1s
@@ -359,10 +360,10 @@ export default {
 						line-height:24px
 						font-size:12px
 					}
-				}	
+				}
 			}
 		}
-		
+
 		// 关闭按钮
 		.detail-close{
 			position: absolute;
@@ -383,9 +384,9 @@ export default {
 
 
 
-	           
-        	
-		
 
-		
+
+
+
+
 </style>

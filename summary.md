@@ -1,16 +1,14 @@
 ### 饿了么 vue 项目总结
 
 ```
-每天记录进度:
-# 2017-05-09 项目启动
-# 2017-05-10 早上 添加静态资源文件，修改 build、dev-serve.js mock模拟数据，
+
+# 项目启动
+# 添加静态资源文件，修改 build、dev-serve.js mock模拟数据，
   添加 meta 标签
   碰到 换台机器 报错-没有 modules ，暂时解决方法，删除整个 node_modules,然后重新 npm install
 
-# 2017-05-11
-	建立好 es6 书写， stylus书写方法，增加了tab导航栏，配置好了路由
-# 2017-05-12
-
+# 建立好 es6 书写， stylus书写方法，增加了tab导航栏，配置好了路由
+#
 	学习了 1px 边框制作（不过感觉用处不大）
 	编写 stylus mixin 函数并在引用
 	(注意：引入外界stylus样式文件时：只能用 @import 在style标签里引用
@@ -27,7 +25,7 @@
 		1.尽量使用类 css 语法即 {}
 		2.尽量避免拷贝代码，产生多余的空格缩进问题
 
-# 2017-05-13
+#
 	做完之后好好学习一下 flex 布局
 	display:flex  flex:1
 	完成 header 组件 ，goods组件 完成布局
@@ -268,12 +266,29 @@
 
     ```
 
+> 详情页组件
+```
+    将选中的商品 通过 props 传给 子组件
+    <food @add="addFood" :food="seeFoodinfo" ref="food"></food>
+    food 组件 通过 $emit 将food 组件添加购物车按钮传递给 父组件 以便实现小球动画
+
+    addFood(target){
+        console.log(target);
+        //当前组件必须在父组件 引入处，bangding @add="xxx",继而执行 父组件的 xxx 方法
+        this.$emit('add',target);
+    },
+
+    详情页 过渡动画
+    <transition name="fade" ></transition>
+
+    &.fly-enter-active, &.fly-leave-active {
+        transition: all 0.2s linear
+    }
+    &.fly-enter, &.fly-leave-active {
+        transform: translate3d(100%, 0, 0)
+    }
+    ```
 
 
 
-
-
-
-
-
-
+> ratingselect 组件（评价选择组件）

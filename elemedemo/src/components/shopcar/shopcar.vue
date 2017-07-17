@@ -254,7 +254,6 @@
 		},
 		//空着购物车列表显示隐藏,data 里面的 fold 值一变化，computed 计算属性里的 listShow 方法便会被触发
 		listShow() {
-		    console.log('list-show');
 		    if(!this.totalCount){
 				this.fold = true;
 				return false;

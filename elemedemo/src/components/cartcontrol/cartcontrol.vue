@@ -2,14 +2,15 @@
 	<div class="cartcontrol">
 		<!-- 减号小球动画 -->
 		<transition name='move'>
-			<div class="cart-decrease" v-show="food.count>0" @click="decreaseCart">
+			<div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart">
 				 <span class="inner icon-remove_circle_outline"></span>
 			</div>
 		</transition>
 		<!--商品数量-->
 		<div class="cart-count"  v-show="food.count>0">{{food.count}}</div>
 		<!--增加按钮-->
-		<div class="cart-add icon-add_circle" @click="addCart"></div>
+		<!--阻止事件冒泡，防止点击事件穿透，进入商品详情页-->
+		<div class="cart-add icon-add_circle" @click.stop.prevent="addCart"></div>
 
 	</div>
 </template>

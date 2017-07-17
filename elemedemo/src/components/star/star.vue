@@ -19,12 +19,12 @@
 			// 确定星星的显示情况
 			itemClass() {
 				let result = [];
-				console.log(this.score);
+//				console.log(this.score);
 				let score = Math.floor(this.score*2)/2;
 				let hasDecimal = score % 1 != 0;
 				let integer = Math.floor(score);
 
-				console.log(integer,hasDecimal,score);
+//				console.log(integer,hasDecimal,score);
 
 				// 将全星推进数组
 				for(let i=0; i<integer; i++){
@@ -41,7 +41,7 @@
 				return result;
 			}
 		}
-	} 
+	}
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 
@@ -114,5 +114,5 @@
 		}
 	}
 
-	
+
 </style>
