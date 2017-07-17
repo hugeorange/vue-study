@@ -47,6 +47,7 @@
 
 <script>
 	import cartcontrol from '../../components/cartcontrol/cartcontrol'
+	// 分割线组件
 	import split from '../../components/split/split'
 
 	export default {
