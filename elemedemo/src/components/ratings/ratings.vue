@@ -37,7 +37,7 @@
 			<!--评论列表-->
 			<div class="ratings-wrapper">
 				<ul>
-					<li class="rating-item" v-for="rating in ratings" v-show="needshow(rating.rateType,rating.txt)">
+					<li class="rating-item" v-for="rating in ratings" v-show="needshow(rating.rateType,rating.text)">
 						<div class="avatar">
 							<img :src="rating.avatar" width="28" height="28" alt="">
 						</div>
@@ -62,7 +62,7 @@
 		</div>
 	</div>
 </template>
-<script type="text/ecmascript-6">
+<script>
 	import  BScroll from 'better-scroll'
 	import star from '../../components/star/star'
 	import split from '../../components/split/split'
@@ -118,7 +118,7 @@ export default {
 			})
 		},
 		needshow(type,txt){
-//		    console.log(type,txt);
+		    console.log(type,txt);
 		    //仅显示文本，条件
 			if(this.onlyContent && !txt){
 			    return false;
@@ -175,7 +175,7 @@ export default {
 						color: rgb(155, 153, 0)
 						line-height :28px
 						margin-bottom :6px
-						line-height :18px
+						// line-height :18px
 					}
 					.title{
 						color: rgb(7, 17, 27)

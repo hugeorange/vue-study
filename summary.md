@@ -292,3 +292,125 @@
 
 
 > ratingselect 组件（评价选择组件）
+
+```
+    1. 评价组件
+    全部、推荐、吐槽 类似一个 tab 选项卡的栏目
+    只看有内容的评价 筛选
+    因为整个项目会有两个地方有这个东西，所以将其抽象为 ratingselect 组件
+
+    组件书写：
+    上边是一个 tab 选项卡
+    1. 定义 三个常量 代表这三种状态
+        const Positive = 0;     //推荐
+        const Negative = 1;     //吐槽
+        const All = 2;          //全部
+
+        <div class="rating-type border-1px">
+            <span @click="select(2,$event)" class="block positive" :class="{'active':selectType===2}">{{desc.all}} <span class="count">{{ratings.length}}</span></span>
+        </div>
+        在点击事件中，将这三个状态，发送给 父组件
+        由于这 三个选项 的 选中状态，是由父组件（food.vue）父组件通过 props 传递过来的，所以不可以在子组件中修改
+
+        select(type,event){
+            if(!event._constructed){
+                return;
+            }
+            //不可以在子组件内，随意改变父组件传过来的值，通过 $emit 将子组件需要改变的值，发送给父组件，然后父组件在通过 props 传给 子组件，然后 view 就会发生相应的改变
+            this.$emit('select',type);
+        }
+
+
+        父组件：
+            使用子组件
+            <ratingselect
+                @select="selectRating"
+                @onlyContent="toggleContent"
+                :ratings="food.ratings"
+                :selectType="selectType"
+                :onlyContent="onlyContent"
+                :desc="desc"
+            ></ratingselect>
+            
+            //在 父组件 methods 对象中 用 selectRating 方法接收子组件 emit 过来的值，赋值给 父组件 selectType 然后在通过 props传递给子组件，从而实现改变
+            selectRating(type){
+                this.selectType = type;
+                this.$nextTick(()=> {
+                    this.scroll.refresh();
+                })
+            },
+
+            //只看有内容的 评价 也是同理 
+
+```
+
+> food.vue 组件中的时间转换函数
+
+```
+    在 common 目录下创建一个公共工具函数 utils.js ,然后在需要用到的 组件中，进行 import 引入 
+
+    utils.js
+        export 
+            function formatDate(fmt){
+                ......
+            }
+
+
+    在 food 组件中使用,只需用 import 引入要使用到的 方法 即可
+    import { format } from 'common/js/utils'
+    在组件中即可直接使用 该方法
+```
+
+>　food.vue 里这种列表布局
+
+```
+    上下左右的间距，用 padding 撑开
+    左边 用 flex 给个固定的尺寸 flex: 0 0 28px
+    右侧 用 flex:1 ，右侧剩余空间 自动充满
+    然后右侧内容自然流布局，上下 margin 分配
+    右侧时间采用绝对定位
+    布局：清晰简单明了
+    
+    一般情况下：列表中文字垂直居中的布局一般用 上下 padding 撑开，不要直接设置高度，用line-height居中
+    文字高度用 line-height 撑开
+
+```
+
+> 商家页面(seller.vue) 商家实景页面
+
+```
+    商家实景左右滚动列表图片
+    
+    先根据图片尺寸和左右 margin 计算出 list 列表容器的 宽度，然后 用 better-scroll 进行左右滚动
+
+    一般情况下，要在 vue mounted 之后就可以初始化 better-scroll 
+    但是这时候，图片资源还没有请求到，所以无法得知 图片的 pics 的 length，继而无法得知，列表容器的宽度
+
+    解决办法：
+    vue 提供了一个 watch 对象，来用来监测数据的变化
+    当 watch 监测到 seller 数据的变化，然后调用 _initPicScroll，初始化 better-scroll 
+    watch:{
+        'seller'(){
+            this.$nextTick(()=>{
+                this._initPicScroll();
+            })
+        }
+    },
+    methods:{
+        _initPicScroll() {
+            if(this.seller.pics){
+                let picWidth = 120;
+                let margin = 6;
+                let width = this.seller.pics.length * (picWidth + margin) - margin;
+                this.$refs.picList.style.width = width + 'px';
+                
+                //better-scroll左右滚动
+                this.picScroll = new BScroll(this.$refs.picWrapper,{
+                    scrollX: true,
+                    eventPassthrough: 'vertical'
+                })
+            }
+        }
+    }
+
+```
