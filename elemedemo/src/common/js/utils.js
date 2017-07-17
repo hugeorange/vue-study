@@ -21,7 +21,7 @@ function formatDate(date, fmt) {
 		}
 	}
 	return fmt;
-};
+}
 
 function padLeftZero(str) {
 	return ('00' + str).substr(str.length);
@@ -50,4 +50,42 @@ export function urlParse() {
 		});
 	}
 	return obj;
-};
+}
+
+/**
+ * localstorage 存储 收藏商家
+ * window.localStorage = __seller__
+ * 存储函数 saveToLocal(id,key,value)
+ * 读取函数 loadFormLocal(id,key,default)
+ * */
+export function saveToLocal(id,key,value) {
+	let seller = window.localStorage.__seller__;
+	if(!seller){
+		seller = {};
+		seller[id] = {};
+	}else{
+		seller = JSON.parse(seller);
+		if(!seller[id]){
+			seller[id] = {};
+		}
+	}
+	seller[id][key] = value;
+	window.localStorage.__seller__ = JSON.stringify(seller);
+}
+
+export function loadFromLocal(id,key,def) {
+	let seller = window.localStorage.__seller__;
+	if(!seller){
+		return def;
+	}
+
+	//es6 不可多次声明 同一个变量
+	seller = JSON.parse(seller)[id];
+	if(!seller){
+		return def;
+	}
+	let ret = seller[key];
+	console.log(ret);
+	return ret || def;
+}
+

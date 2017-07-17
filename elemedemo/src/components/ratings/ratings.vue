@@ -118,7 +118,7 @@ export default {
 			})
 		},
 		needshow(type,txt){
-		    console.log(type,txt);
+//		    console.log(type,txt);
 		    //仅显示文本，条件
 			if(this.onlyContent && !txt){
 			    return false;

@@ -14,9 +14,9 @@
 
         </div>
         <!-- 路由外链 -->
-        <div>
+        <keep-alive>
             <router-view :seller="seller"></router-view>
-        </div>
+        </keep-alive>
     </div>
 </template>
 

@@ -77,6 +77,7 @@
 	import star from '../../components/star/star'
 	import split from '../../components/split/split'
 	import BScroll from 'better-scroll'
+	import { saveToLocal,loadFromLocal } from 'common/js/utils'
 export default {
     props:['seller'],
 	components:{
@@ -84,9 +85,11 @@ export default {
 		split
 	},
 	data(){
-        return {
-			favorite:false
-		}
+		return {
+			favorite: (() => {
+				return loadFromLocal(this.seller.id, 'favorite', false);
+			})()
+		};
 	},
 	computed:{
 		favoriteText(){
@@ -115,7 +118,9 @@ export default {
 	methods:{
 		toggleFavorite(event){
 		    if(!event._constructed) return;
-		    this.favorite = !this.favorite;
+			this.favorite = !this.favorite;
+			console.log(this.favorite);
+			saveToLocal(this.seller.id,'favorite',this.favorite);
 		},
 		_initScroll () {
 			this.scroll = new BScroll(this.$refs.seller,{click:true});
