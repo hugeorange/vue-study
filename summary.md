@@ -264,10 +264,12 @@
             }
             this.fold = !this.fold;
         },
-
     ```
 
+
 > 详情页组件
+
+
 
 ```
     将选中的商品 通过 props 传给 子组件
@@ -289,6 +291,7 @@
     &.fly-enter, &.fly-leave-active {
         transform: translate3d(100%, 0, 0)
     }
+
     ```
 
 
