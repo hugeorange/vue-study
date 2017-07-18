@@ -267,9 +267,7 @@
     ```
 
 
-> 详情页组件
-
-
+> #详情页组件
 
 ```
     将选中的商品 通过 props 传给 子组件
@@ -296,7 +294,7 @@
 
 
 
-> ratingselect 组件（评价选择组件）
+> #ratingselect 组件（评价选择组件）
 
 
 ```
@@ -351,7 +349,7 @@
 ```
 
 
-> food.vue 组件中的时间转换函数
+> #food.vue 组件中的时间转换函数
 
 
 ```
@@ -370,8 +368,7 @@
 ```
 
 
->　food.vue 里这种列表布局
-
+>　#food.vue 里这种列表布局
 
 ```
     上下左右的间距，用 padding 撑开
@@ -387,8 +384,7 @@
 ```
 
 
-> 商家页面(seller.vue) 商家实景页面
-
+> # 商家页面(seller.vue) 商家实景页面
 
 ```
     商家实景左右滚动列表图片
@@ -425,4 +421,32 @@
         }
     }
 
+```
+
+>　# 利用localStorage 在本地收藏商家
+
+```
+    收藏商家是放在本地缓存 localStorage 里的
+
+    #１.　在　common/js/utils 文件里创建两个公共函数函数 写入 localStorae 和 读取 localStorage 
+    # 2.  在点击收藏按钮时，调用存储 方法，首次进入页面时，调用 读取方法
+
+    由于 确定收藏与否的 favorite 属性，是在 data 选项上被vue监测的，所以在data 选项上 favorite 是一个立即执行函数
+
+    data:{
+        favorite: ( () => {
+            // 要读取的对象，key值，默认值
+            return loadFromLocal(this.seller.id, 'favorite', false);    
+        } )()
+    }  
+```
+
+> # 路由切换时，各组件会保持原来的状态
+
+```
+    # 在路由外连上加上  <keep-alive> 即可
+    <!-- 路由外链 -->
+        <keep-alive>
+            <router-view :seller="seller"></router-view>
+        </keep-alive>
 ```

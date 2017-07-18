@@ -73,7 +73,7 @@ export function saveToLocal(id,key,value) {
 	window.localStorage.__seller__ = JSON.stringify(seller);
 }
 
-export function loadFromLocal(id,key,def) {
+export function loadFromLocal(id,key,def) {   // def :default  默认值
 	let seller = window.localStorage.__seller__;
 	if(!seller){
 		return def;
@@ -85,7 +85,6 @@ export function loadFromLocal(id,key,def) {
 		return def;
 	}
 	let ret = seller[key];
-	console.log(ret);
 	return ret || def;
 }
 
