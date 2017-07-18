@@ -73,7 +73,7 @@
 		</div>
 	</div>
 </template>
-<script type="text/ecmascript-6">
+<script>
 	import star from '../../components/star/star'
 	import split from '../../components/split/split'
 	import BScroll from 'better-scroll'

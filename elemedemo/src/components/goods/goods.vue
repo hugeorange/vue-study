@@ -79,7 +79,21 @@ export default {
 	created() {
 		// 商品icon类名
 		this.classMap = ['decrease','discount','guarantee','invoice','special'];
+		//利用 mock.js 模拟的数据用来请求
 
+		this.$http.get('https://www.easy-mock.com/mock/590062fb0e2d1a2d617b9d58/example/ele').then((response) => {
+            
+            this.goods = response.data.goods;
+            this.$nextTick(() => {
+            	this._initScroll();
+            	this._calculateHeight();
+            })
+
+        });
+
+
+
+/*
         // 创建完成 vue 实例后即请求接口，将值赋给 seller，继而通过 props将获得值传给子组件
         this.$http.get('./api/goods').then((response) => {
             console.log(response.data.data);
@@ -91,6 +105,7 @@ export default {
             })
 
         });
+*/
     },
     computed: {
     	//根据食物列表所处的位置，判断菜单的class

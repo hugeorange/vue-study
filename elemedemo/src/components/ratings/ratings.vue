@@ -85,6 +85,17 @@ export default {
 		}
 	},
 	created(){
+
+		this.$http.get('https://www.easy-mock.com/mock/590062fb0e2d1a2d617b9d58/example/ele').then((response) => {
+			this.ratings = response.data.ratings;
+			this.$nextTick(() => {
+				this.scroll = new BScroll(this.$refs.ratings, {
+					click: true
+				});
+			});
+		});
+
+		/*
 		this.$http.get('/api/ratings').then((response) => {
 			response = response.body;
 			if (response.errno === 0) {
@@ -98,6 +109,7 @@ export default {
 				});
 			}
 		});
+		*/
 	},
 	updated(){
 	    this.$nextTick(()=>{
