@@ -67,7 +67,7 @@
 		</transition>
 	</div>
 </template>
-<script>
+<script type="text/ecmascript-6">
 	import BScroll from 'better-scroll'
 	import cartcontrol from '../../components/cartcontrol/cartcontrol'
 	export default {

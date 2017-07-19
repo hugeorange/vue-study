@@ -12,7 +12,7 @@
 	</div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 	//定义3个常量用来表示，组件描述内容
 	const Positive = 0;
 	const Negative = 1;

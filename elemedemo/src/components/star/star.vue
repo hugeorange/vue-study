@@ -3,7 +3,7 @@
 		<span v-for="(itemClass,index) in itemClass" :class="itemClass" class="star-item" key="index"></span>
 	</div>
 </template>
-<script>
+<script type="text/ecmascript-6">
 	const LENGTH = 5;
 	const CLS_ON = 'on';
 	const CLS_HALF = 'half';

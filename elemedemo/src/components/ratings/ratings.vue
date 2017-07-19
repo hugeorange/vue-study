@@ -62,7 +62,7 @@
 		</div>
 	</div>
 </template>
-<script>
+<script type="text/ecmascript-6">
 	import  BScroll from 'better-scroll'
 	import star from '../../components/star/star'
 	import split from '../../components/split/split'
@@ -86,7 +86,7 @@ export default {
 	},
 	created(){
 
-		this.$http.get('http://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele').then((response) => {
+		this.$http.get('https://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele').then((response) => {
 			this.ratings = response.data.ratings;
 			this.$nextTick(() => {
 				this.scroll = new BScroll(this.$refs.ratings, {

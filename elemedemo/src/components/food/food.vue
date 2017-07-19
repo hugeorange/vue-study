@@ -83,7 +83,7 @@
 
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 	import cartcontrol from '../../components/cartcontrol/cartcontrol'
 	// 分割线组件
 	import split from '../../components/split/split'

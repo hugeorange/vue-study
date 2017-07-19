@@ -53,7 +53,7 @@
 	</div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 // 引入better-scroll
 import BScroll from 'better-scroll'
 import shopcar from '../../components/shopcar/shopcar'
@@ -81,8 +81,8 @@ export default {
 		this.classMap = ['decrease','discount','guarantee','invoice','special'];
 		//利用 mock.js 模拟的数据用来请求
 
-		this.$http.get('http://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele').then((response) => {
-            
+		this.$http.get('https://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele').then((response) => {
+
             this.goods = response.data.goods;
             this.$nextTick(() => {
             	this._initScroll();

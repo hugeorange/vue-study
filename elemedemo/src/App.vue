@@ -20,7 +20,7 @@
     </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
 import header from './components/header/header.vue'
 import {urlParse} from 'common/js/utils'
 
@@ -39,18 +39,17 @@ export default {
         'v-header':header
     },
     created() {
-        
+
 
         //用 mock.js 模拟数据请求，不在用本地 data.json 文件
-
-        this.$http.get('http://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele?id=' + this.seller.id).then((response) => {
+        this.$http.get('https://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele?id=' + this.seller.id).then((response) => {
 
             let data = response.data.seller;
 
             this.seller = Object.assign({}, this.seller, data);
 
         });
-        
+
 
         /*
         // 创建完成 vue 实例后即请求接口，将值赋给 seller，继而通过 props将获得值传给子组件
@@ -65,7 +64,7 @@ export default {
 			}
         });
         */
-        
+
     }
 }
 </script>
