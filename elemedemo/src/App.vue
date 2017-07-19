@@ -43,7 +43,7 @@ export default {
 
         //用 mock.js 模拟数据请求，不在用本地 data.json 文件
 
-        this.$http.get('https://www.easy-mock.com/mock/590062fb0e2d1a2d617b9d58/example/ele?id=' + this.seller.id).then((response) => {
+        this.$http.get('http://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele?id=' + this.seller.id).then((response) => {
 
             let data = response.data.seller;
 
