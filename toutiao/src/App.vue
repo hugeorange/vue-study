@@ -1,0 +1,133 @@
+<template>
+  <div id="app">
+      <div class="tabwrap">
+          <div class="tab-item">
+              <router-link to="/index">
+                  <div class="icon icon1"></div>
+                  <div class="icon-word">首页</div>
+              </router-link>
+          </div>
+          <div class="tab-item">
+              <router-link to="/collection">
+                  <div class="icon icon2"></div>
+                  <div class="icon-word">收藏</div>
+              </router-link>
+          </div>
+          <div class="tab-item">
+              <router-link to="/follow">
+                  <div class="icon icon3"></div>
+                  <div class="icon-word">关注</div>
+              </router-link>
+          </div>
+          <div class="tab-item">
+
+              <router-link to="/my">
+                  <div class="icon icon4"></div>
+                  <div class="icon-word">我的</div>
+              </router-link>
+          </div>
+      </div>
+
+      <router-view></router-view>
+
+
+  </div>
+</template>
+
+<script>
+  import {Tabbar,TabbarItem} from 'vux'
+
+  export default {
+      name: 'app',
+      components:{
+          Tabbar,
+          TabbarItem
+      },
+      methods:{
+
+      },
+      watch:{
+          routes(){
+
+          }
+      },
+      created(){
+//          console.log(this.$route);
+      },
+      updated(){
+
+      }
+
+  }
+</script>
+
+<style rel="stylesheet/scss" lang="scss">
+    @import "./common/scss/index";
+    #app{
+        .tabwrap{
+            width: 100%;
+            position: fixed;
+            left:0;
+            right:0;
+            bottom: 0;
+            background-color: #fff;
+            display: flex;
+            height:45px;
+            padding-top: 5px;
+            @include border-1px(#eee);
+
+            .tab-item{
+                flex:1;
+                text-align: center;
+                .icon{
+                    width:0.48rem;
+                    height:0.48rem;
+                    background-size: 100% auto;
+                    background-repeat: no-repeat;
+                    margin: 0 auto;
+                    &.icon1{
+                        background-image: url(./assets/demo/icon11.png);
+                    }
+                    &.icon2{
+                        background-image: url(./assets/demo/icon21.png);
+                    }
+                    &.icon3{
+                        background-image: url(./assets/demo/icon31.png);
+                    }
+                    &.icon4{
+                        background-image: url(./assets/demo/icon41.png);
+                    }
+                }
+                .icon-word{
+                    font-size: 12px;
+                    margin-top: 5px;
+                }
+                & .active{
+                    .icon1{
+                        background-image: url(./assets/demo/icon12.png);
+                    }
+                    .icon2{
+                        background-image: url(./assets/demo/icon22.png);
+                    }
+                    .icon3{
+                        background-image: url(./assets/demo/icon32.png);
+                    }
+                    .icon4{
+                        background-image: url(./assets/demo/icon42.png);
+                    }
+                    .icon-word{
+                        color: red;
+                    }
+                }
+            }
+        }
+    }
+
+</style>
+
+/*#app{*/
+/*width:100%;*/
+/*.label-active{*/
+/*color: red;*/
+/*}*/
+/*}*/
