@@ -64,6 +64,7 @@
 <style rel="stylesheet/scss" lang="scss">
     @import "./common/scss/index";
     #app{
+        height:100%;
         .tabwrap{
             width: 100%;
             position: fixed;
@@ -74,6 +75,7 @@
             display: flex;
             height:45px;
             padding-top: 5px;
+            z-index:9999;
             @include border-1px(#eee);
 
             .tab-item{

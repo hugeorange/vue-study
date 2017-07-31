@@ -1,5 +1,5 @@
 <template>
-    <div id="index">
+  <div id="index">
 
       <x-header style="background-color: red;">
           <span>今日头条</span>
@@ -7,20 +7,18 @@
           <i  class="ion-android-alarm-clock"></i>
       </x-header>
 
-
-        <div class="tab-title" ref='tab_title_hook'>
-            <ul class="box1">
-                <li class="box1-item" :class="{'active':isCur===index}" v-for="(item,index) in tab_title" @click="highlight(index)">
+      <div class="tab-title">
+          <scroller lock-y :scrollbar-x=false ref="scrollwrap">
+              <ul class="box1">
+                  <li class="box1-item" :class="{'active':isCur===index}" v-for="(item,index) in tab_title" @click="highlight(index)">
                     {{item.name}}
-                </li>
-            </ul>
+                  </li>
+              </ul>
+          </scroller>
       </div>
 
-        <div class="loading">加载中*********</div>
-
-      <div class="news-wrapper" ref="content_hook">
-
-          <ul class="news-content">
+      <div class="news-wrapper">
+          <ul>
               <li class="news-item" v-for="(item,index) in newsData">
                   <p class="news-title">{{item.title}}</p>
                   <ul class="img-wrapper" v-if="item.image_list">
@@ -38,18 +36,13 @@
           </ul>
       </div>
 
-      
-
-
-      
-    </div>
+  </div>
 </template>
 
 <script>
     import { XHeader } from 'vux'
     import { Scroller } from 'vux'
     import {ajax} from '../common/js/ajax'
-    import BScroll from 'better-scroll'
     export default {
         name:'index',
         components:{
@@ -80,50 +73,13 @@
                 var self = this;
                 ajax(key,function (data) {
                     self.newsData = data.data;
-
-                    self.$nextTick(()=>{
-                        self.con_scroll && self.con_scroll.refresh();              
-                    })
-
                 })
             },
             highlight(index){
-                //阻止pc 端，点击事件执行多次，（不是自己派发的事件，return）
-                //点击事件是靠 better-scroll 派发的
-                if(!event._constructed) return;
                 this.isCur = index;
                 let key = this.tab_title[index]['key'];
                 this.request(key);
-            },
-            //初始化 better-scroll
-            _initScroll(){
-                var self = this;
-
-                let scroll = new BScroll(this.$refs.tab_title_hook,{
-                    scrollX: true,
-                    click:true
-                    // eventPassthrough: 'vertical'
-                });
-
-
-                this.con_scroll = new BScroll(this.$refs.content_hook,{
-                    click:true,
-                    probeType:1
-                    // eventPassthrough: 'vertical'
-                });
-
-               
-
-                // this.con_scroll.on('touchend',function(pos){
-                //     console.log(pos.y);
-                //     if(pos.y > 50){
-                //         self.$nextTick(()=>{
-
-                //         })
-                //     }
-                // })
-
-            } 
+            }
         },
         filters: {
             date: function(time) {
@@ -145,25 +101,18 @@
                 return time5;
             }
         },
-        created(){
-            this.$nextTick(()=>{
-                this._initScroll();                
-            })
-        },
         mounted(){
-
+            this.$nextTick(()=>{
+                this.$refs.scrollwrap.reset();
+            })
             let key0 = this.tab_title[0]['key'];
             this.request(key0);
-        },
-        updated(){
-            
         }
     }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
     #index{
-        height:100%;
         .vux-header{
             position: fixed;
             top:0;
@@ -205,62 +154,41 @@
         }
         .news-wrapper{
             /*position: relative;*/
-            /*margin-top: 1.62rem;*/
-            /*margin-bottom: 1.0rem;*/
-            position:absolute;
-            left:0;
-            right:0;
-            width:100%;
-            top:1.62rem;
-            bottom:1.0rem;
-            /*z-index:-1;*/
-            .news-content{
-                position:relative;
-                z-index:10;
-                .news-item{
-                    .news-title{
-                        line-height: 0.40rem;
-                    }
-                    padding: 0.20rem 0.40rem;
-                    font-size: 0.32rem;
-                    color: #585151;
-                    border-bottom: 1px solid #eee;
-                    .img-wrapper{
-                        display: flex;
-                        margin-top: 0.10rem;
-                        justify-content: space-between;
-                        li{
-                            width:32%;
-                            /*flex: 1;*/
-                            img{
-                                width:100%;
-                            }
-                        }
-                    }
-                    .bottom-title{
-                        font-size: 10px;
-                        color: #b5b5b5;
-                        margin-top: 8px;
-                        .avIcon{
-                            color: #2a90d7;
-                            border: 1px solid rgba(42,144,215,.5);
-                            border-radius: 2px;
-                            font-size: 8px;
-                            padding: 0 2px;
+            margin-top: 1.62rem;
+            margin-bottom: 1.0rem;
+            .news-item{
+                .news-title{
+                    line-height: 0.40rem;
+                }
+                padding: 0.20rem 0.40rem;
+                font-size: 0.32rem;
+                color: #585151;
+                border-bottom: 1px solid #eee;
+                .img-wrapper{
+                    display: flex;
+                    margin-top: 0.10rem;
+                    justify-content: space-between;
+                    li{
+                        width:32%;
+                        /*flex: 1;*/
+                        img{
+                            width:100%;
                         }
                     }
                 }
+                .bottom-title{
+                    font-size: 10px;
+                    color: #b5b5b5;
+                    margin-top: 8px;
+                    .avIcon{
+                        color: #2a90d7;
+                        border: 1px solid rgba(42,144,215,.5);
+                        border-radius: 2px;
+                        font-size: 8px;
+                        padding: 0 2px;
+                    }
+                }
             }
-            
-        }
-        .loading{
-            position:absolute;
-            left:0;
-            top:80px;
-            width:100%;
-            text-align:center;
-            color:green;
-            font-size:18px;
         }
     }
 </style>
