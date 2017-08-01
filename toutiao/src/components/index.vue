@@ -19,12 +19,13 @@
 
       <div class="news-wrapper" ref="news_hook">
 
-          <ul class="news-content">
-              <li class="news-item" v-for="(item,index) in newsData">
+          <ul class="news-content" ref="news_con">
+              <li class="news-item" v-for="(item,index) in newsData"  @click="newsinfo">
                   <p class="news-title">{{item.title}}</p>
                   <ul class="img-wrapper" v-if="item.image_list">
                       <li v-for="(item,index) in item.image_list">
-                          <img :src="item['url']" alt="">
+                      <!-- :src="item['url']" -->
+                          <img v-lazy="item['url']"  alt="">
                       </li>
                   </ul>
                   <div class="bottom-title">
@@ -39,19 +40,25 @@
           <div class="loading">加载中*********</div>
 
       </div>
+
+      <loading></loading>   
+
     </div>
 </template>
 
 <script>
     import { XHeader } from 'vux'
-    import { Scroller } from 'vux'
     import {ajax} from '../common/js/ajax'
     import BScroll from 'better-scroll'
+
+    import loading from '../components/loading'
+
+    console.log(loading);
     export default {
         name:'index',
         components:{
             XHeader,
-            Scroller
+            loading
         },
         data(){
             return {
@@ -79,7 +86,6 @@
                     self.newsData = data.data;
                     self.$nextTick(()=>{
                         self._initScroll();
-                        console.log(111);
                     })
                 })
             },
@@ -91,6 +97,9 @@
                 let key = this.tab_title[index]['key'];
                 this.request(key);
             },
+            newsinfo(){
+                loading.show();
+            },
             //初始化 better-scroll
             _initScroll(){
                 var self = this;
@@ -101,7 +110,7 @@
                 });
 
 
-                window.test =  this.news_scroll = new BScroll(this.$refs.news_hook,{
+                this.news_scroll = new BScroll(this.$refs.news_hook,{
                     click:true,
                     probeType:1
                 });
@@ -144,19 +153,17 @@
             this.request(key0);
         },
         mounted(){
-
+            console.log('222-'+this.$refs.news_con.offsetHeight);
         },
         updated(){
             var self = this;
 
+            console.log('333-'+this.$refs.news_con.offsetHeight);
             this.$nextTick(()=>{
-                console.log(222);
-                window.test.refresh();
+                console.log('444-'+this.$refs.news_con.offsetHeight);
+                self.news_scroll.refresh();
             })
-            setTimeout(function () {
-//                window.test.refresh();
-                console.log('我执行了');
-            },3000)
+            
         }
     }
 </script>
@@ -235,7 +242,8 @@
                         margin-top: 0.10rem;
                         justify-content: space-between;
                         li{
-                            width:32%;
+                            width:2.13rem;
+                            height:1.50rem;
                             /*flex: 1;*/
                             img{
                                 width:100%;

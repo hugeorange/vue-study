@@ -126,10 +126,3 @@
     }
 
 </style>
-
-/*#app{*/
-/*width:100%;*/
-/*.label-active{*/
-/*color: red;*/
-/*}*/
-/*}*/
