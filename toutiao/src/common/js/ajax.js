@@ -8,7 +8,7 @@ function ajax(kind,fn1,fn2) {
             // console.error(err.message);
            fn2 && fn2(err.message);
         } else {
-            console.log(data);
+            // console.log(data);
            fn1 && fn1(data);
         }
     });

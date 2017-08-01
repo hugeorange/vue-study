@@ -16,9 +16,8 @@
             </ul>
       </div>
 
-        <div class="loading">加载中*********</div>
 
-      <div class="news-wrapper" ref="content_hook">
+      <div class="news-wrapper" ref="news_hook">
 
           <ul class="news-content">
               <li class="news-item" v-for="(item,index) in newsData">
@@ -36,12 +35,10 @@
                   </div>
               </li>
           </ul>
+
+          <div class="loading">加载中*********</div>
+
       </div>
-
-      
-
-
-      
     </div>
 </template>
 
@@ -80,11 +77,10 @@
                 var self = this;
                 ajax(key,function (data) {
                     self.newsData = data.data;
-
                     self.$nextTick(()=>{
-                        self.con_scroll && self.con_scroll.refresh();              
+                        self._initScroll();
+                        console.log(111);
                     })
-
                 })
             },
             highlight(index){
@@ -102,28 +98,26 @@
                 let scroll = new BScroll(this.$refs.tab_title_hook,{
                     scrollX: true,
                     click:true
-                    // eventPassthrough: 'vertical'
                 });
 
 
-                this.con_scroll = new BScroll(this.$refs.content_hook,{
+                window.test =  this.news_scroll = new BScroll(this.$refs.news_hook,{
                     click:true,
                     probeType:1
-                    // eventPassthrough: 'vertical'
                 });
 
-               
 
-                // this.con_scroll.on('touchend',function(pos){
-                //     console.log(pos.y);
-                //     if(pos.y > 50){
-                //         self.$nextTick(()=>{
 
-                //         })
-                //     }
-                // })
+//                 this.con_scroll.on('touchend',function(pos){
+//                     console.log(pos.y);
+//                     if(pos.y > 50){
+//                         self.$nextTick(()=>{
+//                            console.log('我松开手指了');
+//                         })
+//                     }
+//                 })
 
-            } 
+            }
         },
         filters: {
             date: function(time) {
@@ -146,24 +140,36 @@
             }
         },
         created(){
-            this.$nextTick(()=>{
-                this._initScroll();                
-            })
-        },
-        mounted(){
-
             let key0 = this.tab_title[0]['key'];
             this.request(key0);
         },
+        mounted(){
+
+        },
         updated(){
-            
+            var self = this;
+
+            this.$nextTick(()=>{
+                console.log(222);
+                window.test.refresh();
+            })
+            setTimeout(function () {
+//                window.test.refresh();
+                console.log('我执行了');
+            },3000)
         }
     }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
     #index{
-        height:100%;
+        /*height: 100%; */
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 50px;
+        /*background-color: purple;*/
         .vux-header{
             position: fixed;
             top:0;
@@ -204,19 +210,18 @@
             }
         }
         .news-wrapper{
-            /*position: relative;*/
-            /*margin-top: 1.62rem;*/
-            /*margin-bottom: 1.0rem;*/
             position:absolute;
             left:0;
             right:0;
             width:100%;
             top:1.62rem;
-            bottom:1.0rem;
-            /*z-index:-1;*/
+            bottom:0;
+            background-color: #fff;
+            overflow: hidden;
             .news-content{
                 position:relative;
                 z-index:10;
+                background-color: #fff;
                 .news-item{
                     .news-title{
                         line-height: 0.40rem;
@@ -251,16 +256,17 @@
                     }
                 }
             }
-            
+
         }
         .loading{
             position:absolute;
             left:0;
-            top:80px;
+            top:10px;
             width:100%;
             text-align:center;
             color:green;
             font-size:18px;
+            //z-index:-1;
         }
     }
 </style>
