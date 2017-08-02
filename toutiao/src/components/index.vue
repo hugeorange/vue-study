@@ -41,8 +41,6 @@
 
       </div>
 
-      <loading></loading>   
-
     </div>
 </template>
 
@@ -50,15 +48,11 @@
     import { XHeader } from 'vux'
     import {ajax} from '../common/js/ajax'
     import BScroll from 'better-scroll'
-
-    import loading from '../components/loading'
-
-    console.log(loading);
+//    import loading from '../components/loading'
     export default {
         name:'index',
         components:{
             XHeader,
-            loading
         },
         data(){
             return {
@@ -76,7 +70,8 @@
                     {'name':'时尚','key':'news_fashion'},
                 ],
                 isCur:0,
-                newsData:[]
+                newsData:[],
+                isShow:false
             }
         },
         methods:{
@@ -98,7 +93,14 @@
                 this.request(key);
             },
             newsinfo(){
-                loading.show();
+                if(!this.isShow){
+                    loading.show();
+                    this.isShow = !this.isShow;
+                }else{
+                    loading.hide();
+                    this.isShow = !this.isShow;
+                }
+
             },
             //初始化 better-scroll
             _initScroll(){
@@ -163,7 +165,7 @@
                 console.log('444-'+this.$refs.news_con.offsetHeight);
                 self.news_scroll.refresh();
             })
-            
+
         }
     }
 </script>
@@ -278,3 +280,4 @@
         }
     }
 </style>
+<!--因为 我们现在用的框架里 ，有一个 utils 文件，里面有个 通用弹框，每次需要使用的时候 ，直接 utils.alert('提示语句',function(){}) 就可以了，所以我猜有这样的想法-->

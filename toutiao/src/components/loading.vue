@@ -11,26 +11,37 @@
 	</div>
 </template>
 <script>
-		var ele = document.querySelector(".loadEffect");
-		var loading = {
-			elements:ele,
+		let loading = {
+			elements:document.querySelector(".loadEffect"),
 			show(){
-
 				console.log(this);
-				console.log(loading);
-				// this.elements.style.display = 'block';
-				// document.querySelector(".loadEffect").style.display = 'block';
-				loading.elements.style.display = 'block';
+				let el = document.querySelector(".loadEffect");
+				el.style.display = 'block';
 			},
 			hide(){
-				this.elements.style.display = 'none';
+                let el = document.querySelector(".loadEffect");
+				el.style.display = 'none';
 			}
-		}
+		};
 
 		console.log(loading);
-
 		export default loading;
-	
+
+//		export default{
+//		    loading(){
+//                let loading = {
+//                    elements:document.querySelector(".loadEffect"),
+//                    show(){
+//                        console.log(this);
+//                        this.elements.style.display = 'block';
+//                    },
+//                    hide(){
+//                        this.elements.style.display = 'none';
+//                    }
+//                };
+//                console.log(loading);
+//            }
+//        }
 
 </script>
 <style rel="stylesheet/scss" lang="scss">
