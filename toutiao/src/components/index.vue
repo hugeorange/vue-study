@@ -151,10 +151,11 @@
             }
         },
         created(){
-            let key0 = this.tab_title[0]['key'];
-            this.request(key0);
+            
         },
         mounted(){
+            let key0 = this.tab_title[0]['key'];
+            this.request(key0);
             console.log('222-'+this.$refs.news_con.offsetHeight);
         },
         updated(){
