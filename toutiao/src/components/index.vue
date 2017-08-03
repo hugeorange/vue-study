@@ -40,6 +40,11 @@
                       <span class="datetime">{{item.datetime|date}}</span>
                   </div>
               </li>
+
+              <!-- 上拉加载 -->
+              <div class="loading2" v-show="loadingShow2">
+                  上拉加载更多...
+              </div>
           </ul>
 
           <!--刷新成功-->
@@ -77,16 +82,18 @@
                 isCur:0,
                 newsData:[],
                 loadingShow:false,
+                loadingShow2:false,
                 loadTip:false
             }
         },
         methods:{
-            request(key) {
+            request(key,fn) {
                 var self = this;
                 ajax(key,function (data) {
                     self.newsData = data.data;
                     self.$nextTick(()=>{
                         self._initScroll();
+                        fn && fn();
                     })
                 })
             },
@@ -103,7 +110,9 @@
             },
             //初始化 better-scroll
             _initScroll(){
-                var self = this;
+                let self = this;
+                let flagdown = false;
+                let flagup = false;
 
                 let scroll = new BScroll(this.$refs.tab_title_hook,{
                     scrollX: true,
@@ -116,27 +125,58 @@
                     probeType:1
                 });
 
-                this.news_scroll.on('scrollStart',function (pos) {
-//                   self.loadingShow = true;
-                });
+
+                this.news_scroll.on('scroll',function(pos){
+                    console.log('y' + pos.y + '-' + 'this.maxScrollY' + this.maxScrollY);
+                    // 下拉刷新
+                    if(pos.y > 40){
+                        self.loadingShow = true;
+                        flagdown = true;
+                        
+                    }
+
+                    // 上拉加载                   
+                    if(pos.y < this.maxScrollY - 40){
+                        self.loadingShow2 = true;
+                        flagup = true;
+                        console.log('上拉加载。。。');
+                    }
+
+                })
 
                 this.news_scroll.on('scrollEnd',function (pos) {
-                    setTimeout(function () {
-                        self.loadingShow = false;
-                        self.loadTip = true;
-                        setTimeout(function () {
-                            self.loadTip = false;
-                        },1000)
-                    },3000);
-                });
+                    console.log('scrollEnd');
 
-                 this.news_scroll.on('touchend',function(pos){
-                     console.log(pos.y);
-                     if(pos.y > 50){
-                         console.log('我111111');
-                         self.loadingShow = true;
-                     }
-                 });
+                    // 下拉刷新，结束逻辑
+                    if(flagdown){
+                        console.log('flagdown');
+                        flagdown = false;
+
+                        let key0 = self.tab_title[0]['key'];
+                        self.request(key0,function(){
+                            self.loadingShow = false;
+                            self.loadTip = true;
+                            setTimeout(function(){
+                                self.loadTip = false;
+                            },1000);
+                        });
+
+                    }
+
+                    // 上啦加载，结束逻辑
+
+                    if(flagup){
+                        console.log('flagup');
+                        flagup = false;
+                        setTimeout(function(){
+                            self.loadingShow2 = false;
+                            self.loadTip = true;
+                            setTimeout(function(){
+                                self.loadTip = false;
+                            },5000);
+                        },3000)
+                    }
+                });
 
             }
         },
@@ -172,6 +212,15 @@
             })
 
         }
+
+/*
+        var url1 = 'https://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A1D539A81229DEA&cp=5982B99DBE2AAE1&min_behot_time=1501732372'
+
+        var url2 = 'https://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A1D539A81229DEA&cp=5982B99DBE2AAE1&min_behot_time=1501732372'
+
+        var url3 = 'http://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A125A8CEDCF8987&cp=58EC18F948F79E1&min_behot_time=1501731912&callback=__jp1'
+        var url4 = 'http://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A125A8CEDCF8987&cp=58EC18F948F79E1&min_behot_time=1501732482&callback=__jp0'
+*/
     }
 </script>
 
@@ -301,6 +350,10 @@
             font-size: 14px;
             line-height: 30px;
             margin: 0 auto;
+        }
+        .loading2{
+            text-align: center;
+            padding: 10px;
         }
     }
 </style>
