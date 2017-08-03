@@ -20,6 +20,11 @@
       <div class="news-wrapper" ref="news_hook">
 
           <ul class="news-content" ref="news_con">
+              <!--下拉刷新-->
+              <div class="loading" v-show="loadingShow">
+                  <img src="../assets/loading.gif" alt="">
+              </div>
+
               <li class="news-item" v-for="(item,index) in newsData"  @click="newsinfo">
                   <p class="news-title">{{item.title}}</p>
                   <ul class="img-wrapper" v-if="item.image_list">
@@ -37,8 +42,8 @@
               </li>
           </ul>
 
-          <div class="loading">加载中*********</div>
-
+          <!--刷新成功-->
+          <div class="load-result" v-show="loadTip">刷新成功</div>
       </div>
 
     </div>
@@ -71,7 +76,8 @@
                 ],
                 isCur:0,
                 newsData:[],
-                isShow:false
+                loadingShow:false,
+                loadTip:false
             }
         },
         methods:{
@@ -93,13 +99,6 @@
                 this.request(key);
             },
             newsinfo(){
-                if(!this.isShow){
-                    loading.show();
-                    this.isShow = !this.isShow;
-                }else{
-                    loading.hide();
-                    this.isShow = !this.isShow;
-                }
 
             },
             //初始化 better-scroll
@@ -117,16 +116,27 @@
                     probeType:1
                 });
 
+                this.news_scroll.on('scrollStart',function (pos) {
+//                   self.loadingShow = true;
+                });
 
+                this.news_scroll.on('scrollEnd',function (pos) {
+                    setTimeout(function () {
+                        self.loadingShow = false;
+                        self.loadTip = true;
+                        setTimeout(function () {
+                            self.loadTip = false;
+                        },1000)
+                    },3000);
+                });
 
-//                 this.con_scroll.on('touchend',function(pos){
-//                     console.log(pos.y);
-//                     if(pos.y > 50){
-//                         self.$nextTick(()=>{
-//                            console.log('我松开手指了');
-//                         })
-//                     }
-//                 })
+                 this.news_scroll.on('touchend',function(pos){
+                     console.log(pos.y);
+                     if(pos.y > 50){
+                         console.log('我111111');
+                         self.loadingShow = true;
+                     }
+                 });
 
             }
         },
@@ -151,19 +161,13 @@
             }
         },
         created(){
-            
-        },
-        mounted(){
             let key0 = this.tab_title[0]['key'];
             this.request(key0);
-            console.log('222-'+this.$refs.news_con.offsetHeight);
         },
+        mounted(){},
         updated(){
             var self = this;
-
-            console.log('333-'+this.$refs.news_con.offsetHeight);
             this.$nextTick(()=>{
-                console.log('444-'+this.$refs.news_con.offsetHeight);
                 self.news_scroll.refresh();
             })
 
@@ -270,14 +274,33 @@
 
         }
         .loading{
-            position:absolute;
-            left:0;
-            top:10px;
+            /*position:absolute;*/
+            /*left:0;*/
+            //-top:-25px;
             width:100%;
             text-align:center;
             color:green;
             font-size:18px;
             //z-index:-1;
+            img{
+                width:100px;
+            }
+        }
+        .load-result{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 30px;
+            text-align: center;
+            height: 30px;
+            width: 80px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 5px;
+            z-index: 999;
+            font-size: 14px;
+            line-height: 30px;
+            margin: 0 auto;
         }
     }
 </style>
