@@ -27,11 +27,12 @@
               </router-link>
           </div>
       </div>
-      
-      <keep-alive>
-        <router-view></router-view>
-      </keep-alive>
-      
+
+        <transition name="fade" mode="out-in">
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
+        </transition>
   </div>
 </template>
 
@@ -44,12 +45,21 @@
           Tabbar,
           TabbarItem
       },
+      data(){
+          return {
+              transitionName:'slide-right'
+          }
+      },
       methods:{
 
       },
-      watch:{
-          routes(){
-
+      watch: {
+          '$route' (to, from) {
+              const toDepth = to.path.split('/').length;
+              const fromDepth = from.path.split('/').length;
+              console.log(to + '-' + from);
+              this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+              console.log(this.transitionName);
           }
       },
       created(){
@@ -123,6 +133,16 @@
                     }
                 }
             }
+        }
+
+        .fade-enter-active, .fade-leave-active {
+            transform: translate3D(-100%,0,0);
+            //opacity: 0.5;
+            transition: all 1s
+        }
+        .fade-enter, .fade-leave-to {
+            //opacity: 0;
+            //transform: translate3D(0,0,0);
         }
     }
 

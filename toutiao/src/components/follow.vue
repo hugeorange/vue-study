@@ -1,5 +1,5 @@
 <template>
-  <div class="follow">
+  <div id="follow">
     <h1>follow</h1>
   </div>
 </template>
@@ -11,5 +11,9 @@ export default {
 </script>
 
 <style>
-
+    #follow{
+        background-color: #821fe4;
+        width: 100%;
+        height:100%;
+    }
 </style>

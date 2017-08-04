@@ -79,11 +79,12 @@
                     {'name':'国际','key':'news_world'},
                     {'name':'时尚','key':'news_fashion'},
                 ],
-                isCur:0,
-                newsData:[],
-                loadingShow:false,
-                loadingShow2:false,
-                loadTip:false
+                isCur:0,        //当前点击的tab页
+                newsData:[],    //新闻列表
+                loadingShow:false,   //控制下拉刷新 load
+                loadingShow2:false,  //控制上啦加载 load
+                loadTip:false,      //刷新成功提示条
+                tabkey:''           //缓存当前选中的 tab页对应的 key
             }
         },
         methods:{
@@ -102,8 +103,8 @@
                 //点击事件是靠 better-scroll 派发的
                 if(!event._constructed) return;
                 this.isCur = index;
-                let key = this.tab_title[index]['key'];
-                this.request(key);
+                this.tabkey = this.tab_title[index]['key'];
+                this.request(this.tabkey);
             },
             newsinfo(){
 
@@ -132,10 +133,10 @@
                     if(pos.y > 40){
                         self.loadingShow = true;
                         flagdown = true;
-                        
+
                     }
 
-                    // 上拉加载                   
+                    // 上拉加载
                     if(pos.y < this.maxScrollY - 40){
                         self.loadingShow2 = true;
                         flagup = true;
@@ -152,8 +153,7 @@
                         console.log('flagdown');
                         flagdown = false;
 
-                        let key0 = self.tab_title[0]['key'];
-                        self.request(key0,function(){
+                        self.request(self.tabkey,function(){
                             self.loadingShow = false;
                             self.loadTip = true;
                             setTimeout(function(){
@@ -168,13 +168,18 @@
                     if(flagup){
                         console.log('flagup');
                         flagup = false;
-                        setTimeout(function(){
-                            self.loadingShow2 = false;
-                            self.loadTip = true;
-                            setTimeout(function(){
-                                self.loadTip = false;
-                            },5000);
-                        },3000)
+
+                        ajax(self.tabkey,function (data) {
+                            console.log(data.data);
+                            self.newsData = self.newsData.concat(data.data);
+                            self.$nextTick(()=>{
+                                self.loadingShow2 = false;
+                                self.loadTip = true;
+                                setTimeout(function(){
+                                    self.loadTip = false;
+                                },1000);
+                            })
+                        });
                     }
                 });
 
@@ -213,14 +218,6 @@
 
         }
 
-/*
-        var url1 = 'https://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A1D539A81229DEA&cp=5982B99DBE2AAE1&min_behot_time=1501732372'
-
-        var url2 = 'https://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A1D539A81229DEA&cp=5982B99DBE2AAE1&min_behot_time=1501732372'
-
-        var url3 = 'http://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A125A8CEDCF8987&cp=58EC18F948F79E1&min_behot_time=1501731912&callback=__jp1'
-        var url4 = 'http://m.toutiao.com/list/?tag=__all__&ac=wap&count=20&format=json_raw&as=A125A8CEDCF8987&cp=58EC18F948F79E1&min_behot_time=1501732482&callback=__jp0'
-*/
     }
 </script>
 
@@ -253,6 +250,7 @@
             top:0.92rem;
             z-index: 999;
             background-color:#eee;
+            overflow: hidden;
             .box1{
                 /*display: flex;*/
                 overflow: hidden;
