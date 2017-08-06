@@ -28,7 +28,8 @@
           </div>
       </div>
 
-        <transition name="fade" mode="out-in">
+        <!--<transition :name="transitionName">-->
+         <transition name="fade">
             <keep-alive>
                 <router-view></router-view>
             </keep-alive>
@@ -47,7 +48,7 @@
       },
       data(){
           return {
-              transitionName:'slide-right'
+              transitionName:''
           }
       },
       methods:{
@@ -55,17 +56,14 @@
       },
       watch: {
           '$route' (to, from) {
-              const toDepth = to.path.split('/').length;
-              const fromDepth = from.path.split('/').length;
-              console.log(to + '-' + from);
-              this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-              console.log(this.transitionName);
+              // this.transitionName = JSON.parse(window.sessionStorage.__router__).transitionName;
           }
       },
       created(){
-//          console.log(this.$route);
+
       },
       updated(){
+        console.log('updated');
 
       }
 
@@ -74,61 +72,61 @@
 
 <style rel="stylesheet/scss" lang="scss">
     @import "./common/scss/index";
-    #app{
-        height:100%;
-        .tabwrap{
+    #app {
+        height: 100%;
+        .tabwrap {
             width: 100%;
             position: fixed;
-            left:0;
-            right:0;
+            left: 0;
+            right: 0;
             bottom: 0;
             background-color: #fff;
             display: flex;
-            height:45px;
+            height: 45px;
             padding-top: 5px;
-            z-index:9999;
+            z-index: 999;
             @include border-1px(#eee);
 
-            .tab-item{
-                flex:1;
+            .tab-item {
+                flex: 1;
                 text-align: center;
-                .icon{
-                    width:0.48rem;
-                    height:0.48rem;
+                .icon {
+                    width: 0.48rem;
+                    height: 0.48rem;
                     background-size: 100% auto;
                     background-repeat: no-repeat;
                     margin: 0 auto;
-                    &.icon1{
+                    &.icon1 {
                         background-image: url(./assets/demo/icon11.png);
                     }
-                    &.icon2{
+                    &.icon2 {
                         background-image: url(./assets/demo/icon21.png);
                     }
-                    &.icon3{
+                    &.icon3 {
                         background-image: url(./assets/demo/icon31.png);
                     }
-                    &.icon4{
+                    &.icon4 {
                         background-image: url(./assets/demo/icon41.png);
                     }
                 }
-                .icon-word{
+                .icon-word {
                     font-size: 12px;
                     margin-top: 5px;
                 }
-                & .active{
-                    .icon1{
+                & .active {
+                    .icon1 {
                         background-image: url(./assets/demo/icon12.png);
                     }
-                    .icon2{
+                    .icon2 {
                         background-image: url(./assets/demo/icon22.png);
                     }
-                    .icon3{
+                    .icon3 {
                         background-image: url(./assets/demo/icon32.png);
                     }
-                    .icon4{
+                    .icon4 {
                         background-image: url(./assets/demo/icon42.png);
                     }
-                    .icon-word{
+                    .icon-word {
                         color: red;
                     }
                 }
@@ -136,14 +134,38 @@
         }
 
         .fade-enter-active, .fade-leave-active {
-            transform: translate3D(-100%,0,0);
-            //opacity: 0.5;
-            transition: all 1s
+            transition: all 0.3s;
         }
         .fade-enter, .fade-leave-to {
-            //opacity: 0;
-            //transform: translate3D(0,0,0);
+            opacity: 0;
         }
     }
+
+/*
+        //微信切换样式 ，左右滚动
+        //前进动画样式
+        .forward-enter-active,.forward-leave-active{
+          transition: all 0.3s;
+        }
+
+        .forward-enter{
+          transform: translateX(100%);
+        }
+        .forward-leave-to{
+          transform: translateX(-100%);
+        }
+
+        // 后退动画样式
+        .reverse-enter-active,.reverse-leave-active{
+          transition: all 0.3s;
+        }
+        .reverse-enter{
+          transform: translateX(-100%);
+        }
+        .reverse-leave-to{
+          transform: translateX(100%);
+        }
+    }
+*/
 
 </style>

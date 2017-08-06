@@ -15,5 +15,7 @@
     background-color: orangered;
     width: 100%;
     height:100%;
+    text-align: center;
+    position: absolute;
 }
 </style>

@@ -57,12 +57,178 @@
        解决办法：图片容器高度事先写死，完美的解决了
 
     4. 图片懒加载  vue-lazyload 插件，超好用
+       懒加载引用的图片地址：loading 图片
+
+       如果 在js 引用静态图片，因为webpack 不会解析 js 文件里的图片，
+       所以要用 import 引用或是把图片放在顶层的 static 目录里
+        import logo from './assets/loading.gif'
+
+### 微信左右滚动效果
+
+  - 在 路由 beforeEach(to,from,next) 钩子里 要做下面的事情
+  - 假如组件为 index1，index2
+  - 在 sessionStorage 里面 创建 一个 __router__值
+  - __router__的值包括：count, transitionName , to.path ,from.path
+  - count 初识值为 0；
+  - transitionName 初始值为 ''
+  - to.path 初始值为  undefined
+  - form.path 初始值为 undefined
+  - 首次进入时 to.index(index1) 为空 执行 else
+  - count++ · 
+  - 判断 to.path !== '/' && history[to.path] = historyCount
+  - history['transitionName'] = 'forward'; 为前进状态
+  - index1:1,count:1
+  - 二次 进入（路由已跳转过一次） 此时 to.path 依旧 为 undefined ，而 from.path 为 to.path 的值
+  - 继续走 else 里面，重复上面的步骤 此时 index2:2,count2,index1:1
+  - 在继续点第一个 tab 相当于回到第一个 tab
+  - 此时：to.path == index1, from.path == index2
+  - 假如 ：!fromIndex || parseInt(toIndex) > parseInt(fromIndex
+  -       或：toIndex === '0' && fromIndex === '0'
+  -       为 forward 前进状态
+  - 否则： 为 reserve 后退状态
+  - 
+
+      ```
+      router.beforeEach(function (to, from, next) {
+      let history = window.sessionStorage.__router__;
+      if(!history){
+        history = {};
+      }else{
+        history = JSON.parse(history);
+      }
+      console.log(history);
+
+      let historyCount = history.count * 1;
+
+        const toIndex = history[to.path];        // 要去的索引
+
+        const fromIndex = history[from.path];    //要离开的索引
 
 
+        if (toIndex) {
+          if (!fromIndex || parseInt(toIndex) > parseInt(fromIndex) || (toIndex === '0' && fromIndex === '0')) {
+          history['transitionName'] = 'forward';
+          } else {
+              history['transitionName'] = 'reverse';
+          }
+        } else {
+          //第一次没有记录session-storage 的情况
+          ++historyCount;
+          history['count'] = historyCount;
 
+          to.path !== '/' && (history[to.path] = historyCount);
+        history['transitionName'] = 'forward';
+        }
 
+        history = JSON.stringify(history);
 
+        window.sessionStorage.__router__ = history;
 
+        if (/\/http/.test(to.path)) {
+          let url = to.path.split('http')[1];
+          window.location.href = `http${url}`
+        } else {
+          next()
+        }
+    });
+
+      ```
+
+#### app.vue
+  通过 watch 选项动态的改变transitionName 的值
+  ```
+   <transition name="fade">
+        <keep-alive>
+            <router-view></router-view>
+        </keep-alive>
+    </transition>
+
+  watch: {
+      '$route' (to, from) {
+          console.log(to,from);
+          this.transitionName = JSON.parse(window.sessionStorage.__router__).transitionName;
+      }
+  },
+
+  样式：
+    //微信切换样式 ，左右滚动
+  //前进动画样式
+  .forward-enter-active,.forward-leave-active{
+    transition: all 0.3s;
+  }
+
+  .forward-enter{
+    transform: translateX(100%);
+  }
+  .forward-leave-to{
+    transform: translateX(-100%);
+  }
+
+  // 后退动画样式
+  .reverse-enter-active,.reverse-leave-active{
+    transition: all 0.3s;
+  }
+  .reverse-enter{
+    transform: translateX(-100%);
+  }
+  .reverse-leave-to{
+    transform: translateX(100%);
+  }
+  ```
+#### 存在的问题
+如果一开始访问的路径：不是  `http://192.168.31.13:8081/#/index`
+而是：`http://192.168.31.13:8081/#/index2`
+即不是按顺序访问每个tab的，to.path 和 from.path 就会出问题
+暂时未找到解决方案
+况且这种 滚动效果 感觉不太好，还不如 opactiy 变化好呢，故改用 opacity
+即简单又省事效果又好
+
+### sessionStorage 和 localStorage 本地存储问题
+1. sessionStorage 本地会话存储，会话结束-浏览器关闭（不包括刷新页面，恢复页面），存储结果清除
+2. localStorage 本地存储，除非手动清除，否则永不清除 
+3. 大小传说 5M
+4. 方法1：getItem(key),setItem(key,value),clear()
+5. 方法2：利用 . 或 [] 语法，访问或设置
+6. 事件：
+7. 如果你监听storage变更事件你就会发现，当数据发生变化时本页是监听不到storage事件变更消息的。而同域的其他打开的页面反而监听到了该消息。悲剧不？
+  解决办法：
+    ```
+      var SetItem = localStorage.setItem;
+    // 修改localStorage的setItem方法
+    localStorage.setItem = function(key,value) {
+        var setItemEvent = new Event("setItemEvent");
+        setItemEvent.value = value;
+        setItemEvent.key = key;
+        // 手动触发setItemEvent
+        window.dispatchEvent(setItemEvent);
+        // 执行原方法
+        SetItem.apply(this,arguments);
+    }
+    
+    window.addEventListener("setItemEvent", function(e) {
+        // 检测是否为需要监听的key值
+        if (e.key == "xxx") {
+            console.log(e.value);
+        }
+    });
+    localStorage.setItem("xxx","123");
+
+    ```
+  
+### storage只能存储字符串 不能存储其他类型数据
+1. 存储对象,读取对象：
+
+```
+let history = window.sessionStorage.__router__;
+  if(!history){
+    history = {};
+  }else{
+    //读取
+    history = JSON.parse(history);
+  }
+  //存储
+  window.sessionStorage.__router__ = history;
+```
 
 
 

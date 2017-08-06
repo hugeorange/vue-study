@@ -14,6 +14,7 @@ export default new Router({
       {path: '/collection', name:'collection', component: collection},
       {path: '/follow', name:'follow', component: follow},
       {path: '/my', name:'my', component: my},
+      // {path: '*', redirect: '/index' },
   ],
     'linkActiveClass':'active'  //为路由匹配激活link-active，方便设置类
 

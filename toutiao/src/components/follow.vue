@@ -15,5 +15,7 @@ export default {
         background-color: #821fe4;
         width: 100%;
         height:100%;
+        text-align: center;
+        position: absolute;
     }
 </style>

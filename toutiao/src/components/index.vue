@@ -1,20 +1,28 @@
 <template>
     <div id="index">
 
-      <x-header style="background-color: red;">
+      <!-- <x-header style="background-color: red;">
           <span>今日头条</span>
           <x-icon slot="overwrite-left" type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
           <i  class="ion-android-alarm-clock"></i>
-      </x-header>
+      </x-header> -->
+    
+    <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
+        with more menu
+    </x-header>
+
+    <div v-transfer-dom >
+      <actionsheet :menus="menus" v-model="showMenus" @on-click-menu1="bottommenu1()"  @on-click-menu2="bottommenu2()" show-cancel></actionsheet>
+    </div>
 
 
-        <div class="tab-title" ref='tab_title_hook'>
-            <ul class="box1">
-                <li class="box1-item" :class="{'active':isCur===index}" v-for="(item,index) in tab_title" @click="highlight(index)">
-                    {{item.name}}
-                </li>
-            </ul>
-      </div>
+    <div class="tab-title" ref='tab_title_hook'>
+        <ul class="box1">
+            <li class="box1-item" :class="{'active':isCur===index}" v-for="(item,index) in tab_title" @click="highlight(index)">
+                {{item.name}}
+            </li>
+        </ul>
+    </div>
 
 
       <div class="news-wrapper" ref="news_hook">
@@ -43,7 +51,7 @@
 
               <!-- 上拉加载 -->
               <div class="loading2" v-show="loadingShow2">
-                  上拉加载更多...
+                  加载更多...
               </div>
           </ul>
 
@@ -55,7 +63,7 @@
 </template>
 
 <script>
-    import { XHeader } from 'vux'
+    import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
     import {ajax} from '../common/js/ajax'
     import BScroll from 'better-scroll'
 //    import loading from '../components/loading'
@@ -63,9 +71,22 @@
         name:'index',
         components:{
             XHeader,
+            Actionsheet,
+            TransferDom,
+            ButtonTab,
+            ButtonTabItem
+        },
+        directives: {
+            TransferDom
         },
         data(){
             return {
+                menus: {
+                    menu1: 'Take Photo',
+                    menu2: 'Choose from photos'
+                },
+                showMenus: false,
+
                 tab_title:[
                     {'name':'推荐','key':'__all__'},
                     {'name':'热点','key':'news_hot'},
@@ -88,6 +109,12 @@
             }
         },
         methods:{
+            bottommenu(){
+                alert(1);
+            },
+            bottommenu2(){
+                alert(2);
+            },
             request(key,fn) {
                 var self = this;
                 ajax(key,function (data) {
@@ -170,7 +197,7 @@
                         flagup = false;
 
                         ajax(self.tabkey,function (data) {
-                            console.log(data.data);
+//                            console.log(data.data);
                             self.newsData = self.newsData.concat(data.data);
                             self.$nextTick(()=>{
                                 self.loadingShow2 = false;
@@ -239,10 +266,15 @@
         }
         .ion-android-alarm-clock{
             position: absolute;
-            top: 0.03rem;
-            right: 0.24rem;
-            font-size: 0.60rem;
+            top: 4px;
+            right: 12px;
+            font-size: 30px;
         }
+
+        .v-transfer-dom{
+            z-index:99999;
+        }
+
         .tab-title{
             position: fixed;
             left:0;
