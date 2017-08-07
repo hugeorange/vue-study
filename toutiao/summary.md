@@ -190,6 +190,9 @@
 
   解决办法：
 
+- 自定义事件创建及触发： `http://www.cnblogs.com/stephenykk/p/4861420.html#`
+
+
 ```
 var SetItem = localStorage.setItem;
   // 修改localStorage的setItem方法
@@ -225,6 +228,7 @@ let history = window.sessionStorage.__router__;
     history = JSON.parse(history);
   }
   //存储
+  history = JSON.stringify(history);
   window.sessionStorage.__router__ = history;
 ```
 
