@@ -7,12 +7,19 @@
           <i  class="ion-android-alarm-clock"></i>
       </x-header> -->
     
-    <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
-        with more menu
-    </x-header>
+    <!-- <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
+        <span>今日头条</span>
+    </x-header> -->
+
+    <div class="header-x">
+        <i class="icon iconfont icon-mail_fill" @click="email"></i>
+        <span class="title">今日头条</span>
+        <i class="icon iconfont icon-search1" @click="search"></i>
+    </div>
+
 
     <div v-transfer-dom >
-      <actionsheet :menus="menus" v-model="showMenus" @on-click-menu1="bottommenu1()"  @on-click-menu2="bottommenu2()" show-cancel></actionsheet>
+       <actionsheet v-model="showMenus" :menus="menus" @on-click-menu="bottommenu" show-cancel></actionsheet>
     </div>
 
 
@@ -109,12 +116,17 @@
             }
         },
         methods:{
-            bottommenu(){
-                alert(1);
+            bottommenu(menu){
+                console.log(menu)
             },
-            bottommenu2(){
-                alert(2);
+
+            email(){
+                console.log('email');
             },
+            search(){
+                console.log('search');
+            },
+           
             request(key,fn) {
                 var self = this;
                 ajax(key,function (data) {
@@ -242,33 +254,45 @@
             this.$nextTick(()=>{
                 self.news_scroll.refresh();
             })
-
         }
-
     }
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
     #index{
-        /*height: 100%; */
         position: absolute;
         left: 0;
         right: 0;
         top: 0;
         bottom: 50px;
-        /*background-color: purple;*/
-        .vux-header{
+        .header-x{
             position: fixed;
             top:0;
             left:0;
             right:0;
+            height: 40px;
+            background-color: red;
             z-index: 999;
+            text-align: center;
+            .title{
+                line-height: 40px;
+                color: #fff;
+                font-size: 18px;
+            }
         }
-        .ion-android-alarm-clock{
+        .icon-search1{
             position: absolute;
             top: 4px;
             right: 12px;
             font-size: 30px;
+            color: #fff;
+        }
+        .icon-mail_fill{
+            position: absolute;
+            top: 4px;
+            left: 12px;
+            font-size: 30px;
+            color: #fff;
         }
 
         .v-transfer-dom{
