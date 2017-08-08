@@ -6,7 +6,7 @@
           <x-icon slot="overwrite-left" type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
           <i  class="ion-android-alarm-clock"></i>
       </x-header> -->
-    
+
     <!-- <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
         <span>今日头条</span>
     </x-header> -->
@@ -41,19 +41,32 @@
               </div>
 
               <li class="news-item" v-for="(item,index) in newsData"  @click="newsinfo">
-                  <p class="news-title">{{item.title}}</p>
-                  <ul class="img-wrapper" v-if="item.image_list">
-                      <li v-for="(item,index) in item.image_list">
-                      <!-- :src="item['url']" -->
-                          <img v-lazy="item['url']"  alt="">
-                      </li>
-                  </ul>
-                  <div class="bottom-title">
-                      <span class="avIcon" v-show="item.label==='广告'">广告</span>
-                      <span class="writer">{{item.media_name}}</span> &nbsp;&nbsp;
-                      <span class="comment_count">评论&nbsp;{{item.comment_count}}</span>
-                      <span class="datetime">{{item.datetime|date}}</span>
-                  </div>
+                  <router-link
+                      :to="{
+                            name:'newsDetails',
+                            params:{
+                                newsItem:item
+                            }
+                      }"
+                  >
+
+                      <p class="news-title">{{item.title}}</p>
+                      <ul class="img-wrapper" v-if="item.image_list">
+                          <li v-for="(item,index) in item.image_list">
+                              <!-- :src="item['url']" -->
+                              <img v-lazy="item['url']"  alt="">
+                          </li>
+                      </ul>
+                      <div class="bottom-title">
+                          <span class="avIcon" v-show="item.label==='广告'">广告</span>
+                          <span class="writer">{{item.media_name}}</span> &nbsp;&nbsp;
+                          <span class="comment_count">评论&nbsp;{{item.comment_count}}</span>
+                          <span class="datetime">{{item.datetime|date}}</span>
+                      </div>
+                  </router-link>
+
+                  <router-view :newsItem="item"></router-view>
+
               </li>
 
               <!-- 上拉加载 -->
@@ -64,6 +77,8 @@
 
           <!--刷新成功-->
           <div class="load-result" v-show="loadTip">刷新成功</div>
+
+
       </div>
 
     </div>
@@ -126,7 +141,7 @@
             search(){
                 console.log('search');
             },
-           
+
             request(key,fn) {
                 var self = this;
                 ajax(key,function (data) {
@@ -194,10 +209,10 @@
 
                         self.request(self.tabkey,function(){
                             self.loadingShow = false;
-                            self.loadTip = true;
-                            setTimeout(function(){
-                                self.loadTip = false;
-                            },1000);
+//                            self.loadTip = true;
+//                            setTimeout(function(){
+//                                self.loadTip = false;
+//                            },1000);
                         });
 
                     }
@@ -213,10 +228,10 @@
                             self.newsData = self.newsData.concat(data.data);
                             self.$nextTick(()=>{
                                 self.loadingShow2 = false;
-                                self.loadTip = true;
-                                setTimeout(function(){
-                                    self.loadTip = false;
-                                },1000);
+//                                self.loadTip = true;
+//                                setTimeout(function(){
+//                                    self.loadTip = false;
+//                                },1000);
                             })
                         });
                     }
@@ -242,6 +257,12 @@
                     time5 = parseInt(time4/60) + '时前';
                 }
                 return time5;
+            }
+        },
+        watch:{
+            '$route'(to,from,next){
+                debugger
+                console.log(to,from);
             }
         },
         created(){
