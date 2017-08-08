@@ -84,7 +84,7 @@
             display: flex;
             height: 45px;
             padding-top: 5px;
-            z-index: 999;
+            /*z-index: 999;*/
             @include border-1px(#eee);
 
             .tab-item {
