@@ -209,17 +209,14 @@
 
                         self.request(self.tabkey,function(){
                             self.loadingShow = false;
-<<<<<<< HEAD
                             // self.loadTip = true;
                             // setTimeout(function(){
                             //     // self.loadTip = false;
                             // },1000);
-=======
 //                            self.loadTip = true;
 //                            setTimeout(function(){
 //                                self.loadTip = false;
 //                            },1000);
->>>>>>> 52c233d4ae244db081a58543591fac5fd2a268da
                         });
 
                     }
@@ -235,17 +232,14 @@
                             self.newsData = self.newsData.concat(data.data);
                             self.$nextTick(()=>{
                                 self.loadingShow2 = false;
-<<<<<<< HEAD
                                 // self.loadTip = true;
                                 // setTimeout(function(){
                                 //     // self.loadTip = false;
                                 // },1000);
-=======
 //                                self.loadTip = true;
 //                                setTimeout(function(){
 //                                    self.loadTip = false;
 //                                },1000);
->>>>>>> 52c233d4ae244db081a58543591fac5fd2a268da
                             })
                         });
                     }
