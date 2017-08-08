@@ -16,4 +16,21 @@ function ajax(kind,fn1,fn2) {
         }
     });
 }
-export {ajax}
+
+/*
+    fn1 成功回调函数
+    fn2 失败回调函数
+*/
+function ajax2(url,fn1,fn2) {
+    loading.style.display = "block";
+    jsonp(url, null, function (err, data) {
+        if (err) {
+            loading.style.display = "none";
+            fn2 && fn2(err.message);
+        } else {
+            loading.style.display = "none";
+            fn1 && fn1(data);
+        }
+    });
+}
+export {ajax,ajax2}

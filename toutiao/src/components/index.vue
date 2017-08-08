@@ -40,14 +40,19 @@
                   <img src="../assets/loading.gif" alt="">
               </div>
 
-              <li class="news-item" v-for="(item,index) in newsData"  @click="newsinfo">
-                  <router-link
+              <!-- <li class="news-item" v-for="(item,index) in newsData"> -->
+
+                  <router-link 
+                        class="news-item" v-for="(item,index) in newsData"
                       :to="{
                             name:'newsDetails',
+                            path:'/newsDetails',
                             params:{
                                 newsItem:item
                             }
                       }"
+                      tag='li'
+                      :key='index'
                   >
 
                       <p class="news-title">{{item.title}}</p>
@@ -65,9 +70,9 @@
                       </div>
                   </router-link>
 
-                  <router-view :newsItem="item"></router-view>
+                  
 
-              </li>
+              <!-- </li> -->
 
               <!-- 上拉加载 -->
               <div class="loading2" v-show="loadingShow2">
@@ -77,7 +82,9 @@
 
           <!--刷新成功-->
           <div class="load-result" v-show="loadTip">刷新成功</div>
-
+            
+          <!-- 路由外联 -->
+          <router-view></router-view>
 
       </div>
 
@@ -159,9 +166,6 @@
                 this.isCur = index;
                 this.tabkey = this.tab_title[index]['key'];
                 this.request(this.tabkey);
-            },
-            newsinfo(){
-
             },
             //初始化 better-scroll
             _initScroll(){
@@ -269,8 +273,8 @@
         },
         watch:{
             '$route'(to,from,next){
-                debugger
-                console.log(to,from);
+                // debugger
+                console.log('index' , to , from);
             }
         },
         created(){
