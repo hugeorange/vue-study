@@ -194,10 +194,10 @@
 
                         self.request(self.tabkey,function(){
                             self.loadingShow = false;
-                            self.loadTip = true;
-                            setTimeout(function(){
-                                self.loadTip = false;
-                            },1000);
+                            // self.loadTip = true;
+                            // setTimeout(function(){
+                            //     // self.loadTip = false;
+                            // },1000);
                         });
 
                     }
@@ -213,10 +213,10 @@
                             self.newsData = self.newsData.concat(data.data);
                             self.$nextTick(()=>{
                                 self.loadingShow2 = false;
-                                self.loadTip = true;
-                                setTimeout(function(){
-                                    self.loadTip = false;
-                                },1000);
+                                // self.loadTip = true;
+                                // setTimeout(function(){
+                                //     // self.loadTip = false;
+                                // },1000);
                             })
                         });
                     }
@@ -303,7 +303,7 @@
             position: fixed;
             left:0;
             right:0;
-            top:0.92rem;
+            top:40px;
             z-index: 999;
             background-color:#eee;
             overflow: hidden;
