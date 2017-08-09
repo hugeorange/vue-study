@@ -13,7 +13,7 @@
 </template>
 <script>
 import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
-import { ajax2 } from '../common/js/ajax' 
+import { ajax2 } from '../common/js/ajax'
     export default{
         // props:['newsItem'],
         components:{
@@ -32,16 +32,20 @@ import { ajax2 } from '../common/js/ajax'
             }
         },
         created(){
+
             this.newsItem = this.$route.params.newsItem;
-            this.souceUrl = this.newsItem.source_url
+//            this.souceUrl = this.newsItem.source_url
         },
         mounted(){
+//            this.$router.push('index');
+            console.log('mounted');
             let self = this;
             var url = 'https://m.toutiao.com' + this.$route.params.newsItem.source_url + 'info/';
-            this.requestInfo(url);
+            this.requestInfo();
         },
         methods:{
-            requestInfo(url){
+            requestInfo(){
+                var url = 'https://m.toutiao.com' + this.$route.params.newsItem.source_url + 'info/';
                 let self = this;
                 ajax2(url,function(data){
                     self.newsInfo = data.data;
@@ -51,17 +55,23 @@ import { ajax2 } from '../common/js/ajax'
             }
         },
         watch:{
-            '$route'(to,from,next){
-                console.log('to-',to,'from-',from)
-                if(to.params.newsItem.source_url){
-                    let url = 'https://m.toutiao.com' + to.params.newsItem.source_url + 'info/';
-                    this.requestInfo(url);    
-                }
-            }
+//            '$route'(to,from,next){
+//                if(to.params.newsItem){
+//                    let url = 'https://m.toutiao.com' + to.params.newsItem.source_url + 'info/';
+//                    this.requestInfo(url);
+//                }
+//            },
+//            '$route': 'requestInfo'
+        },
+        beforeRouteEnter (to, from, next) {
+            console.log('beforeRouteEnter');
+            next();
+            // 在渲染该组件的对应路由被 confirm 前调用
+            // 不！能！获取组件实例 `this`
+            // 因为当钩子执行前，组件实例还没被创建
         },
         updated(){
             console.log('updated',this.$route.params)
-            // console.log('222------' + this.$route.params.newsItem.source_url);
         }
     }
 </script>

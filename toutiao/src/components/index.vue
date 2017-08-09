@@ -42,7 +42,7 @@
 
               <!-- <li class="news-item" v-for="(item,index) in newsData"> -->
 
-                  <router-link 
+                  <router-link
                         class="news-item" v-for="(item,index) in newsData"
                       :to="{
                             name:'newsDetails',
@@ -70,7 +70,7 @@
                       </div>
                   </router-link>
 
-                  
+
 
               <!-- </li> -->
 
@@ -82,7 +82,7 @@
 
           <!--刷新成功-->
           <div class="load-result" v-show="loadTip">刷新成功</div>
-            
+
           <!-- 路由外联 -->
           <router-view></router-view>
 
