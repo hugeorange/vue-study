@@ -48,6 +48,7 @@
                             name:'newsDetails',
                             path:'/newsDetails',
                             params:{
+                                id:item.source_url,
                                 newsItem:item
                             }
                       }"
@@ -274,7 +275,7 @@
         watch:{
             '$route'(to,from,next){
                 // debugger
-                console.log('index' , to , from);
+                // console.log('index' , to , from);
             }
         },
         created(){
@@ -283,6 +284,7 @@
         },
         mounted(){},
         updated(){
+            // console.log('updated,index.vue');
             var self = this;
             this.$nextTick(()=>{
                 self.news_scroll.refresh();

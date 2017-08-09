@@ -4,9 +4,11 @@ import index from '@/components/index'
 import collection from '@/components/collection'
 import follow from '@/components/follow'
 import my from '@/components/my'
-import newsDetails from '@/components/newsDetails'
+// import newsDetails from '@/components/newsDetails'
 
 Vue.use(Router)
+
+const newsDetails = resolve => require(['@/components/newsDetails'],resolve);
 
 export default new Router({
   routes: [
@@ -15,7 +17,7 @@ export default new Router({
       {path: '/collection', name:'collection', component: collection},
       {path: '/follow', name:'follow', component: follow},
       {path: '/my', name:'my', component: my},
-      {path: '/newsDetails', name: 'newsDetails',component:newsDetails },
+      {path: '/newsDetails/:id', name: 'newsDetails',component:newsDetails },
   ],
     'linkActiveClass':'active'  //为路由匹配激活link-active，方便设置类
 

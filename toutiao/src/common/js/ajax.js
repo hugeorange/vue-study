@@ -9,6 +9,7 @@ function ajax(kind,fn1,fn2) {
     jsonp(url, null, function (err, data) {
         if (err) {
             loading.style.display = "none";
+            console.log(err.message)
             fn2 && fn2(err.message);
         } else {
             loading.style.display = "none";

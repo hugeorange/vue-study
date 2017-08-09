@@ -28,50 +28,46 @@ import { ajax2 } from '../common/js/ajax'
                 newsItem:{},
                 souceUrl:'',
                 newsInfo:{},
-                souceUrl:'',
+                souceUrl:this.$route.params.id,
             }
         },
         created(){
-
-            this.newsItem = this.$route.params.newsItem;
-//            this.souceUrl = this.newsItem.source_url
+            console.log('created');
         },
         mounted(){
-//            this.$router.push('index');
-            console.log('mounted');
-            let self = this;
-            var url = 'https://m.toutiao.com' + this.$route.params.newsItem.source_url + 'info/';
+            console.log('created');
             this.requestInfo();
         },
         methods:{
             requestInfo(){
-                var url = 'https://m.toutiao.com' + this.$route.params.newsItem.source_url + 'info/';
-                let self = this;
-                ajax2(url,function(data){
-                    self.newsInfo = data.data;
-                },function(msg){
-                    alert(msg);
-                })
+                // debugger
+                console.log('requestInfo',this.souceUrl);
+
+                if(this.souceUrl){
+                    var url = 'https://m.toutiao.com' + this.souceUrl + 'info/';
+                    let self = this;
+                    ajax2(url,function(data){
+                        self.newsInfo = data.data;
+                    },function(msg){
+                        alert(msg);
+                    })    
+                }else{
+                    console.log('离开本页，不执行请求！');
+                }
+                
             }
         },
         watch:{
-//            '$route'(to,from,next){
-//                if(to.params.newsItem){
-//                    let url = 'https://m.toutiao.com' + to.params.newsItem.source_url + 'info/';
-//                    this.requestInfo(url);
-//                }
-//            },
-//            '$route': 'requestInfo'
+            '$route'(){
+                // debugger
+                // console.log('$route0',this.$route.params.id);
+                // this.souceUrl = this.$route.params.id;
+                // this.requestInfo();
+           }
         },
-        beforeRouteEnter (to, from, next) {
-            console.log('beforeRouteEnter');
-            next();
-            // 在渲染该组件的对应路由被 confirm 前调用
-            // 不！能！获取组件实例 `this`
-            // 因为当钩子执行前，组件实例还没被创建
-        },
+    
         updated(){
-            console.log('updated',this.$route.params)
+            console.log('updated newsDetails' ,this.$route.params)
         }
     }
 </script>
