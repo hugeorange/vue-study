@@ -6,7 +6,16 @@
 
 <script>
   export default {
-    name:'collection'
+      name:'collection',
+      created(){
+          console.log('created');
+      },
+      mounted(){
+          console.log('mounted');
+      },
+      updated(){
+          console.log('updated');
+      }
   }
 </script>
 

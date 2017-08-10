@@ -71,7 +71,7 @@
   - to.path 初始值为  undefined
   - form.path 初始值为 undefined
   - 首次进入时 to.index(index1) 为空 执行 else
-  - count++ 
+  - count++
   - 判断 `to.path !== '/' && history[to.path] = historyCount`
   - `history['transitionName'] = 'forward'`; 为前进状态
   - 此时： `index1:1,count:1`
@@ -181,7 +181,7 @@
 
 ### sessionStorage 和 localStorage 本地存储问题
 1. sessionStorage 本地会话存储，会话结束-浏览器关闭（不包括刷新页面，恢复页面），存储结果清除
-2. localStorage 本地存储，除非手动清除，否则永不清除 
+2. localStorage 本地存储，除非手动清除，否则永不清除
 3. 大小传说 5M
 4. 方法1：getItem(key),setItem(key,value),clear()
 5. 方法2：利用 . 或 [] 语法，访问或设置
@@ -205,7 +205,7 @@ var SetItem = localStorage.setItem;
       // 执行原方法
       SetItem.apply(this,arguments);
   }
-  
+
   window.addEventListener("setItemEvent", function(e) {
       // 检测是否为需要监听的key值
       if (e.key == "xxx") {
@@ -231,6 +231,38 @@ let history = window.sessionStorage.__router__;
   history = JSON.stringify(history);
   window.sessionStorage.__router__ = history;
 ```
+
+### activated 钩子
+1. 在 <keep-alive></keep-alive> 组件中使用
+2. keep-alive 组件在第二次渲染时不会触发 create mounted updated 钩子
+3. 但是会触发 activated 钩子
+4. 使用场景： 列表页==> 详情页的切换
+    - 第一次从列表页进详情页时会加载数据 触发 created,mounted,updated 钩子
+    - 第二次以上钩子就不会被触发了， 需要加上一个 activated 生命周期钩子，在里面加载请求数据
+5.  - 路由跳转时 需要用到 动态路由 即在 路径后面加个 id
+    - index.js `{path: '/newsDetails/:key', name: 'newsDetails',component:newsDetails },`
+    - 导航写法：
+    ```
+    <router-link
+        class="news-item" v-for="(item,index) in newsData"
+        :to="{
+             name:'newsDetails',
+             path:'/newsDetails',
+             params:{
+                 key:index,
+                 id:item.source_url,
+                 newsItem:item
+             }
+       }"
+
+       tag='li'
+       :key='index'
+       >
+    </router-link>
+    //路由外链
+    <router-view></router-view>
+
+    ```
 
 
 

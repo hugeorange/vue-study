@@ -40,49 +40,41 @@
                   <img src="../assets/loading.gif" alt="">
               </div>
 
-              <!-- <li class="news-item" v-for="(item,index) in newsData"> -->
+              <router-link
+                    class="news-item" v-for="(item,index) in newsData"
+                  :to="{
+                        name:'newsDetails',
+                        path:'/newsDetails',
+                        params:{
+                            id:item.source_url,
+                            newsItem:item
+                        }
+                  }"
+                  tag='li'
+                  :key='index'
+              >
 
-                  <router-link
-                        class="news-item" v-for="(item,index) in newsData"
-                      :to="{
-                            name:'newsDetails',
-                            path:'/newsDetails',
-                            params:{
-                                id:item.source_url,
-                                newsItem:item
-                            }
-                      }"
-                      tag='li'
-                      :key='index'
-                  >
-
-                      <p class="news-title">{{item.title}}</p>
-                      <ul class="img-wrapper" v-if="item.image_list">
-                          <li v-for="(item,index) in item.image_list">
-                              <!-- :src="item['url']" -->
-                              <img v-lazy="item['url']"  alt="">
-                          </li>
-                      </ul>
-                      <div class="bottom-title">
-                          <span class="avIcon" v-show="item.label==='广告'">广告</span>
-                          <span class="writer">{{item.media_name}}</span> &nbsp;&nbsp;
-                          <span class="comment_count">评论&nbsp;{{item.comment_count}}</span>
-                          <span class="datetime">{{item.datetime|date}}</span>
-                      </div>
-                  </router-link>
-
-
-
-              <!-- </li> -->
+                  <p class="news-title">{{item.title}}</p>
+                  <ul class="img-wrapper" v-if="item.image_list">
+                      <li v-for="(item,index) in item.image_list">
+                          <!-- :src="item['url']" -->
+                          <img v-lazy="item['url']"  alt="">
+                      </li>
+                  </ul>
+                  <div class="bottom-title">
+                      <span class="avIcon" v-show="item.label==='广告'">广告</span>
+                      <span class="writer">{{item.media_name}}</span> &nbsp;&nbsp;
+                      <span class="comment_count">评论&nbsp;{{item.comment_count}}</span>
+                      <span class="datetime">{{item.datetime|date}}</span>
+                  </div>
+              </router-link>
 
               <!-- 上拉加载 -->
               <div class="loading2" v-show="loadingShow2">
                   加载更多...
               </div>
-          </ul>
 
-          <!--刷新成功-->
-          <div class="load-result" v-show="loadTip">刷新成功</div>
+          </ul>
 
           <!-- 路由外联 -->
           <router-view></router-view>
@@ -179,12 +171,10 @@
                     click:true
                 });
 
-
                 this.news_scroll = new BScroll(this.$refs.news_hook,{
                     click:true,
                     probeType:1
                 });
-
 
                 this.news_scroll.on('scroll',function(pos){
                     console.log('y' + pos.y + '-' + 'this.maxScrollY' + this.maxScrollY);
@@ -192,7 +182,6 @@
                     if(pos.y > 40){
                         self.loadingShow = true;
                         flagdown = true;
-
                     }
 
                     // 上拉加载
@@ -201,50 +190,27 @@
                         flagup = true;
                         console.log('上拉加载。。。');
                     }
-
-                })
+                });
 
                 this.news_scroll.on('scrollEnd',function (pos) {
-                    console.log('scrollEnd');
-
                     // 下拉刷新，结束逻辑
                     if(flagdown){
                         console.log('flagdown');
                         flagdown = false;
-
                         self.request(self.tabkey,function(){
                             self.loadingShow = false;
-                            // self.loadTip = true;
-                            // setTimeout(function(){
-                            //     // self.loadTip = false;
-                            // },1000);
-//                            self.loadTip = true;
-//                            setTimeout(function(){
-//                                self.loadTip = false;
-//                            },1000);
                         });
 
                     }
 
                     // 上啦加载，结束逻辑
-
                     if(flagup){
                         console.log('flagup');
                         flagup = false;
-
                         ajax(self.tabkey,function (data) {
-//                            console.log(data.data);
                             self.newsData = self.newsData.concat(data.data);
                             self.$nextTick(()=>{
                                 self.loadingShow2 = false;
-                                // self.loadTip = true;
-                                // setTimeout(function(){
-                                //     // self.loadTip = false;
-                                // },1000);
-//                                self.loadTip = true;
-//                                setTimeout(function(){
-//                                    self.loadTip = false;
-//                                },1000);
                             })
                         });
                     }
@@ -273,10 +239,7 @@
             }
         },
         watch:{
-            '$route'(to,from,next){
-                // debugger
-                // console.log('index' , to , from);
-            }
+            '$route'(to,from,next){}
         },
         created(){
             let key0 = this.tab_title[0]['key'];
@@ -284,7 +247,7 @@
         },
         mounted(){},
         updated(){
-            // console.log('updated,index.vue');
+//             console.log('updated,index.vue');
             var self = this;
             this.$nextTick(()=>{
                 self.news_scroll.refresh();
