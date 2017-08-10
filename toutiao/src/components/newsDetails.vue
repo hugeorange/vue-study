@@ -1,11 +1,18 @@
 <template>
     <div id="newsDetails">
+        
+
         <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
             <span>新闻详情</span>
         </x-header>
-        <div class="newsInfo">
+
+        <div class="bg-img" v-if="newShow==1">
+            <img src="../assets/bg.png" alt="" class="">
+        </div>
+
+        <article class="newsInfo" v-if="newShow==2">
             <div class="title">{{ newsInfo.title }}</div>
-            <div class="aticle_author" v-if="newsInfo">
+            <div class="aticle_author" v-if="newsInfo.media_user">
                 <a href="">
                     <div class="avatar">
                         <img :src="newsInfo.media_user.avatar_url" alt="">
@@ -14,20 +21,27 @@
                 <div class="author-info">
                     <span class="author-name">{{newsInfo.media_user.screen_name}}</span>
                     <img src="https://s3b.pstatp.com/growth/mobile_detail/image/toutiaohao_tag_bc28ef080879ea46945f90a280f66c28.svg" alt="">
-                    <div class="time">{{newsInfo.publish_time}}</div>
+                    <div class="time">{{newsInfo.publish_time | formatTime}}</div>
                 </div>
                 <div class="gz">关注</div>
 
             </div>
-
-            <div class="news-content" v-html = "newsInfo.content"></div>
+            <div class="news-content" v-html = "newsInfo.content" ref="news_content"></div>
+        </article>
+        <!-- 展开全文 -->
+        <div class="unfold-field" @click="unfold_field" ref="unfold_field">
+            <div class="unfold-field-mask"></div>
+            <div>展开全文<i class="icon iconfont icon-unfold"></i></div>
         </div>
+
     </div>
 
 </template>
 <script>
 import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
 import { ajax2 } from '../common/js/ajax'
+import { utils } from '../common/js/utils'
+
     export default{
         // props:['newsItem'],
         components:{
@@ -43,6 +57,7 @@ import { ajax2 } from '../common/js/ajax'
                 souceUrl:'',
                 newsInfo:{},
                 souceUrl:this.$route.params.id,
+                newShow:1       //新闻详情展示
             }
         },
         created(){
@@ -60,13 +75,19 @@ import { ajax2 } from '../common/js/ajax'
                     let self = this;
                     ajax2(url,function(data){
                         self.newsInfo = data.data;
+                        self.newShow = 2;
                     },function(msg){
                         alert(msg);
                     })
                 }else{
                     console.log('离开本页，不执行请求！');
                 }
+            },
 
+            //点击展开全文
+            unfold_field(){
+                this.$refs.news_content.style.height = 'auto';
+                this.$refs.unfold_field.style.display = 'none';
             }
         },
         watch:{
@@ -76,10 +97,13 @@ import { ajax2 } from '../common/js/ajax'
                 // this.requestInfo();
            }
         },
-        filter:{
+        filters:{
             formatTime(time){
+                utils.dateFormat();
                 let time1 = time + '000';
-
+                let time2 = new Date(parseInt(time1));
+                let time3 = time2.format('MM-dd hh:mm:ss');
+                return time3;
             }
         },
         activated(){
@@ -95,15 +119,15 @@ import { ajax2 } from '../common/js/ajax'
 <style rel="stylesheet/scss" lang="scss">
     #newsDetails{
         width: 100%;
-        height:100%;
         background-color: #FFF;
-        position: relative;
         z-index: 999;
+        position: relative;
         .vux-header{
             width: 100%;
             position: fixed;
             top: 0;
             background-color: red;
+            z-index: 3;
             .vux-header-left .vux-header-back{
                 color: #fff;
             }
@@ -112,6 +136,17 @@ import { ajax2 } from '../common/js/ajax'
                 border-width: 1px 0 0 1px;
             }
         }
+        .bg-img{
+            background-color: #fff;
+            width: 100%;
+            position: absolute;
+            top: 46px;
+            z-index: 1;
+            img{
+                width: 100%;
+            }
+        }
+
         .newsInfo{
             padding: 46px 17px 0 17px;
             margin-top: 12px;
@@ -124,11 +159,12 @@ import { ajax2 } from '../common/js/ajax'
             .aticle_author{
                 display: flex;
                 align-items: center;
+                margin: 10px 0;
                 .avatar{
                     height: 36px;
                     width: 36px;
                     border: none;
-                    position: relative;
+                    // position: relative;
                     img{
                         width: 100%;
                         height:100%;
@@ -157,7 +193,6 @@ import { ajax2 } from '../common/js/ajax'
                     display: block;
                     text-align: center;
                     color: hsla(0,0%,100%,.96);
-                    -webkit-box-sizing: border-box;
                     box-sizing: border-box;
                     width: 72px;
                     height: 29px;
@@ -169,11 +204,29 @@ import { ajax2 } from '../common/js/ajax'
             .news-content{
                 margin-top: 10px;
                 line-height: 28px;
+                color: #333;
+                font-size: 0.36rem;
+                line-height: 0.60rem;
+                height: 800px;
+                overflow: hidden;
                 img{
                     width: 100%;
                 }
             }
-
+        }
+        .unfold-field{
+            padding: 15px 0 ;
+            box-shadow: 0 0 10px #ccc;
+            text-align: center;
+            color: #406599;
+            position: relative;
+            .unfold-field-mask{
+                position: absolute;
+                top: -38px;
+                height: 38px;
+                width: 100%;
+                background-image: linear-gradient(-180deg,hsla(0,0%,100%,0),#fff);
+            }
         }
     }
 </style>

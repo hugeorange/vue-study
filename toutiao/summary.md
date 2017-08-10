@@ -6,6 +6,11 @@
 2. 引入 reset.css
 3. 加载 icon 图标字体库 http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css
 
+####　使用 css 预处理器 sass
+  1. 安装 `node-sass sass-loader`  `npm install node-sass sass-loader --save-dev`
+  2. 使用 `<style rel="stylesheet/scss" lang="scss">`
+  3. 参考文章： `http://www.jianshu.com/p/67f52071657d`
+
 #### app.vue
 1. 底部导航栏栏
 

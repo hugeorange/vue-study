@@ -25,6 +25,7 @@
 		};
 
 		console.log(loading);
+        
 		export default loading;
 
 //		export default{
@@ -52,7 +53,7 @@
             margin: 0 auto;
             margin-top:100px;
             z-index: 999;
-            display: none;
+            // display: none;
         }
         .loadEffect span{
             display: inline-block;
