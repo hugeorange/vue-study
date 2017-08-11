@@ -1,6 +1,6 @@
 <template>
     <div id="newsDetails">
-        
+
 
         <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
             <span>新闻详情</span>
@@ -113,6 +113,8 @@ import { utils } from '../common/js/utils'
         },
         updated(){
             console.log('updated newsDetails');
+            this.$refs.news_content.style.height = '800px';
+            this.$refs.unfold_field.style.display = 'block';
         }
     }
 </script>
@@ -175,6 +177,7 @@ import { utils } from '../common/js/utils'
                     flex: 1;
                     font-size: 12px;
                     padding-left: 10px;
+                    color: #948d8d;
                     .author-name{
                         font-size: 14px;
                         line-height: 16px;
@@ -185,7 +188,7 @@ import { utils } from '../common/js/utils'
                         margin-bottom: -3px;
                     }
                     .time{
-                        line-height: 12px;
+                        line-height: 18px;
                     }
                 }
                 .gz{
@@ -203,12 +206,14 @@ import { utils } from '../common/js/utils'
             }
             .news-content{
                 margin-top: 10px;
-                line-height: 28px;
                 color: #333;
                 font-size: 0.36rem;
                 line-height: 0.60rem;
                 height: 800px;
                 overflow: hidden;
+                p{
+                    margin:5px 0;
+                }
                 img{
                     width: 100%;
                 }
