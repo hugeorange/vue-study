@@ -2,8 +2,9 @@
     <div id="newsDetails">
 
 
-        <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
+        <x-header>
             <span>新闻详情</span>
+            <i class="icon iconfont icon-share3" @click="share"></i>
         </x-header>
 
         <div class="bg-img" v-if="newShow==1">
@@ -54,7 +55,6 @@ import { utils } from '../common/js/utils'
         data(){
             return {
                 newsItem:{},
-                souceUrl:'',
                 newsInfo:{},
                 souceUrl:this.$route.params.id,
                 newShow:1       //新闻详情展示
@@ -71,7 +71,7 @@ import { utils } from '../common/js/utils'
             requestInfo(){
                 console.log('requestInfo',this.souceUrl);
                 if(this.souceUrl){
-                    var url = 'https://m.toutiao.com' + this.souceUrl + 'info/';
+                    var url = 'https://m.toutiao.com/' + this.souceUrl + '/info/';
                     let self = this;
                     ajax2(url,function(data){
                         self.newsInfo = data.data;
@@ -88,6 +88,9 @@ import { utils } from '../common/js/utils'
             unfold_field(){
                 this.$refs.news_content.style.height = 'auto';
                 this.$refs.unfold_field.style.display = 'none';
+            }
+            ,share(){
+                console.log('share');
             }
         },
         watch:{
@@ -123,7 +126,9 @@ import { utils } from '../common/js/utils'
         width: 100%;
         background-color: #FFF;
         z-index: 999;
-        position: relative;
+        /*position: relative;*/
+        position: absolute;
+        top:0;
         .vux-header{
             width: 100%;
             position: fixed;
@@ -136,6 +141,11 @@ import { utils } from '../common/js/utils'
             .vux-header-left .left-arrow:before{
                 border: 1px solid #fff;
                 border-width: 1px 0 0 1px;
+            }
+            .icon-share3{
+                font-size: 28px;
+                position: absolute;
+                right:10px;
             }
         }
         .bg-img{

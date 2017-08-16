@@ -7,51 +7,44 @@
           <i  class="ion-android-alarm-clock"></i>
       </x-header> -->
 
-    <!-- <x-header :right-options="{showMore: true}" @on-click-more="showMenus = true">
-        <span>今日头条</span>
-    </x-header> -->
+        <div class="header-x">
+            <i class="icon iconfont icon-mail_fill" @click="email"></i>
+            <span class="title">今日头条</span>
+            <i class="icon iconfont icon-search1" @click="search"></i>
+        </div>
 
-    <div class="header-x">
-        <i class="icon iconfont icon-mail_fill" @click="email"></i>
-        <span class="title">今日头条</span>
-        <i class="icon iconfont icon-search1" @click="search"></i>
-    </div>
-
-
-    <div v-transfer-dom >
-       <actionsheet v-model="showMenus" :menus="menus" @on-click-menu="bottommenu" show-cancel></actionsheet>
-    </div>
-
-
-    <div class="tab-title" ref='tab_title_hook'>
+        <div class="tab-title" ref='tab_title_hook'>
         <ul class="box1">
             <li class="box1-item" :class="{'active':isCur===index}" v-for="(item,index) in tab_title" @click="highlight(index)">
                 {{item.name}}
             </li>
         </ul>
-    </div>
+        </div>
 
+        <div class="news-wrapper" ref="news_hook">
 
-      <div class="news-wrapper" ref="news_hook">
-
-          <ul class="news-content" ref="news_con">
+            <ul class="news-content" ref="news_con">
               <!--下拉刷新-->
               <div class="loading" v-show="loadingShow">
                   <img src="../assets/loading.gif" alt="">
               </div>
 
-              <router-link
-                    class="news-item" v-for="(item,index) in newsData"
-                  :to="{
-                        name:'newsDetails',
-                        path:'/newsDetails',
-                        params:{
-                            id:item.source_url,
-                            newsItem:item
-                        }
-                  }"
-                  tag='li'
-                  :key='index'
+              <!--路由参数设置-->
+              <!--:to="{-->
+              <!--name:'newsDetails',-->
+              <!--path:'/newsDetails',-->
+              <!--params:{-->
+              <!--id:item.source_url,-->
+              <!--newsItem:item-->
+              <!--}-->
+              <!--}"-->
+                <!--嵌套路由设置-->
+              <!--:to = "'index/newsDetails' + item.source_url"-->
+
+              <router-link class="news-item" v-for="(item,index) in newsData"
+                   :to = "'/newsDetails' + item.source_url"
+                   tag='li'
+                   :key='index'
               >
 
                   <p class="news-title">{{item.title}}</p>
@@ -75,40 +68,36 @@
               </div>
 
           </ul>
+            <!-- 路由外联 -->
+            <router-view></router-view>
+        </div>
 
-          <!-- 路由外联 -->
-          <router-view></router-view>
+        <!-- 测试 对于普通标签 v-show v-if 均能触发 transition 动画-->
+        <transition name="fade1">
+            <div class="ttt" v-if="ttt==1"></div>
+        </transition>
 
-      </div>
+
+        <!--对于动态增加的组件 貌似 v-show 不能触发 transition动画，要用 v-if-->
+        <transition name="fade">
+            <to-top :flag="toTop" @scrolltoTop="scroll_to"></to-top>
+        </transition>
 
     </div>
 </template>
 
 <script>
-    import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
     import {ajax} from '../common/js/ajax'
     import BScroll from 'better-scroll'
+    import toTop from '../components/toTop'
 //    import loading from '../components/loading'
     export default {
         name:'index',
         components:{
-            XHeader,
-            Actionsheet,
-            TransferDom,
-            ButtonTab,
-            ButtonTabItem
-        },
-        directives: {
-            TransferDom
+            toTop
         },
         data(){
             return {
-                menus: {
-                    menu1: 'Take Photo',
-                    menu2: 'Choose from photos'
-                },
-                showMenus: false,
-
                 tab_title:[
                     {'name':'推荐','key':'__all__'},
                     {'name':'热点','key':'news_hot'},
@@ -127,7 +116,9 @@
                 loadingShow:false,   //控制下拉刷新 load
                 loadingShow2:false,  //控制上啦加载 load
                 loadTip:false,      //刷新成功提示条
-                tabkey:''           //缓存当前选中的 tab页对应的 key
+                tabkey:'',           //缓存当前选中的 tab页对应的 key
+                toTop:false,         //回到顶部
+                ttt:0
             }
         },
         methods:{
@@ -137,9 +128,11 @@
 
             email(){
                 console.log('email');
+                this.ttt = 1;
             },
             search(){
                 console.log('search');
+                this.ttt = 0;
             },
 
             request(key,fn) {
@@ -183,7 +176,9 @@
                         self.loadingShow = true;
                         flagdown = true;
                     }
-
+                    if(pos.y < -500){
+                        self.toTop = true;
+                    }
                     // 上拉加载
                     if(pos.y < this.maxScrollY - 40){
                         self.loadingShow2 = true;
@@ -216,7 +211,13 @@
                     }
                 });
 
+            },
+            //滚动到顶部
+            scroll_to(){
+                this.toTop = false;
+                this.news_scroll.scrollTo(0, 0, 300);
             }
+
         },
         filters: {
             date: function(time) {
@@ -292,11 +293,6 @@
             font-size: 30px;
             color: #fff;
         }
-
-        .v-transfer-dom{
-            z-index:99999;
-        }
-
         .tab-title{
             position: fixed;
             left:0;
@@ -406,6 +402,33 @@
         .loading2{
             text-align: center;
             padding: 10px;
+        }
+
+
+        .fade-enter-active, .fade-leave-active {
+            transition: all 3s;
+        }
+        .fade-enter, .fade-leave-to {
+            opacity: 0;
+        }
+        /*测试*/
+        .ttt{
+            position: fixed;
+            left: 0.5rem;
+            bottom: 2rem;
+            z-index: 1000;
+            height: 0.9rem;
+            width: 0.9rem;
+            border-radius: 50%;
+            background: #d43d3d;
+            text-align: center;
+            line-height: 0.9rem;
+            &.fade1-enter-active, &.fade1-leave-active {
+                transition: all 5s;
+            }
+            &.fade1-enter, &.fade1-leave-to {
+                opacity: 0;
+            }
         }
     }
 </style>
