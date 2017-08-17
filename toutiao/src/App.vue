@@ -1,32 +1,5 @@
 <template>
   <div id="app">
-      <div class="tabwrap">
-          <div class="tab-item">
-              <router-link to="/index">
-                  <div class="icon icon1"></div>
-                  <div class="icon-word">首页</div>
-              </router-link>
-          </div>
-          <div class="tab-item">
-              <router-link to="/collection">
-                  <div class="icon icon2"></div>
-                  <div class="icon-word">收藏</div>
-              </router-link>
-          </div>
-          <div class="tab-item">
-              <router-link to="/follow">
-                  <div class="icon icon3"></div>
-                  <div class="icon-word">关注</div>
-              </router-link>
-          </div>
-          <div class="tab-item">
-
-              <router-link to="/my">
-                  <div class="icon icon4"></div>
-                  <div class="icon-word">我的</div>
-              </router-link>
-          </div>
-      </div>
 
         <!--<transition :name="transitionName">-->
          <transition name="fade">
@@ -34,17 +7,15 @@
                 <router-view></router-view>
             </keep-alive>
         </transition>
+
   </div>
 </template>
 
 <script>
-  import {Tabbar,TabbarItem} from 'vux'
   import {ajax} from './common/js/ajax'
   export default {
       name: 'app',
       components:{
-          Tabbar,
-          TabbarItem
       },
       data(){
           return {

@@ -269,9 +269,21 @@ let history = window.sessionStorage.__router__;
 
     ```
 
+### 或者
+```
+<router-link
+    class="news-item" v-for="(item,index) in newsData"
+    :to=" 'newsDetail' + item.source_url "
 
+   tag='li'
+   :key='index'
+   >
+</router-link>
+```
 
+####  列表页 ==> 详情页
 
+从列表页到详情页不适合用嵌套路由
 
 
 

@@ -77,6 +77,7 @@
             <div class="ttt" v-if="ttt==1"></div>
         </transition>
 
+        <bottom></bottom>
 
         <!--对于动态增加的组件 貌似 v-show 不能触发 transition动画，要用 v-if-->
         <transition name="fade">
@@ -90,11 +91,13 @@
     import {ajax} from '../common/js/ajax'
     import BScroll from 'better-scroll'
     import toTop from '../components/toTop'
-//    import loading from '../components/loading'
+    import bottom from '../components/bottom'
+    //    import loading from '../components/loading'
     export default {
         name:'index',
         components:{
-            toTop
+            toTop,
+            bottom
         },
         data(){
             return {
@@ -133,6 +136,7 @@
             search(){
                 console.log('search');
                 this.ttt = 0;
+                this.$router.push('/search');
             },
 
             request(key,fn) {
@@ -166,11 +170,11 @@
 
                 this.news_scroll = new BScroll(this.$refs.news_hook,{
                     click:true,
-                    probeType:1
+                    probeType:2
                 });
 
                 this.news_scroll.on('scroll',function(pos){
-                    console.log('y' + pos.y + '-' + 'this.maxScrollY' + this.maxScrollY);
+//                    console.log('y' + pos.y + '-' + 'this.maxScrollY' + this.maxScrollY);
                     // 下拉刷新
                     if(pos.y > 40){
                         self.loadingShow = true;
@@ -180,7 +184,7 @@
                         self.toTop = true;
                     }
                     // 上拉加载
-                    if(pos.y < this.maxScrollY - 40){
+                    if(pos.y < this.maxScrollY ){
                         self.loadingShow2 = true;
                         flagup = true;
                         console.log('上拉加载。。。');
