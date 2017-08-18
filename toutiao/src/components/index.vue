@@ -42,7 +42,13 @@
               <!--:to = "'index/newsDetails' + item.source_url"-->
 
               <router-link class="news-item" v-for="(item,index) in newsData"
-                   :to = "'/newsDetails' + item.source_url"
+                   :to ='{
+                        path: "/newsDetails" + item.source_url,
+                        query:{
+                            newsItem:JSON.stringify(item)
+                        }
+                   }'
+
                    tag='li'
                    :key='index'
               >

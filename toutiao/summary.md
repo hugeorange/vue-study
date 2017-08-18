@@ -283,7 +283,32 @@ let history = window.sessionStorage.__router__;
 
 ####  列表页 ==> 详情页
 
-从列表页到详情页不适合用嵌套路由
+> 从列表页到详情页不适合用嵌套路由
+> 因为其是两个单独的页面，并不会同时出现在一屏上
 
+### 嵌套路由写法
 
+- route.js
+```
+  {path: '/index', name:'index', component: index,
+    children:[
+        {path: '/index/newsDetails/:id', name: 'newsDetails',component:newsDetails },
+    ]
+  }
+```
+- index.vue
+```
+<router-link>
+  :to = "'index/newsDetails' + item.source_url"
+</router-link>
+```
 
+### 注意子组件向父组件 commit 的时候，老是忘记书写格式
+
+### 路由传参
+- 不仅仅传递一个动态路由id还可以 通过 params 和 query进行传递，但都会显示在 url上（暂时未找到解决办法）
+- 列表页 ==> 将该项所有参数传递到详情页，可以现将对象数据 序列化为字符串，放在 query li
+- 在详情页时，取值时反序列化，继而可以在详情页里面使用
+- 由于数据是存在 url 里 故可以在刷新页面仍可以拿到数据
+
+### 收藏页 ==> vuex

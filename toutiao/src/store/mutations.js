@@ -9,5 +9,11 @@ export default {
     },
     decrement (state){
         state.count--;
+    },
+    addCollection(state,item){
+        state.collectionNews.push(item);
+    },
+    reduceCollection(state){
+
     }
 }

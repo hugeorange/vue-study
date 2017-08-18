@@ -24,7 +24,11 @@
                     <img src="https://s3b.pstatp.com/growth/mobile_detail/image/toutiaohao_tag_bc28ef080879ea46945f90a280f66c28.svg" alt="">
                     <div class="time">{{newsInfo.publish_time | formatTime}}</div>
                 </div>
-                <div class="gz">关注</div>
+
+                <div class="gz" @click="collection">
+                    <span v-if="!isCollection">收藏</span>
+                    <span v-if="isCollection">取消收藏</span>
+                </div>
 
             </div>
             <div class="news-content" v-html = "newsInfo.content" ref="news_content"></div>
@@ -35,6 +39,11 @@
             <div>展开全文<i class="icon iconfont icon-unfold"></i></div>
         </div>
 
+        <!--分享组件-->
+        <transition name="moveTop">
+            <share v-on:hideShare="hide_Share" :isShow="isShare" v-show="isShare"></share>
+        </transition>
+
     </div>
 
 </template>
@@ -42,6 +51,9 @@
 import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
 import { ajax2 } from '../common/js/ajax'
 import { utils } from '../common/js/utils'
+import share from '../components/share.vue'
+import {mapState,mapMutations,mapGetters} from 'vuex'
+
 
     export default{
         // props:['newsItem'],
@@ -50,26 +62,27 @@ import { utils } from '../common/js/utils'
             Actionsheet,
             TransferDom,
             ButtonTab,
-            ButtonTabItem
+            ButtonTabItem,
+            share
         },
         data(){
             return {
                 newsItem:{},
                 newsInfo:{},
                 souceUrl:this.$route.params.id,
-                newShow:1       //新闻详情展示
+                newitem:{},
+                newShow:1,             //新闻详情展示
+                isShare:false,        //分享组件
+                isCollection:false
             }
         },
         created(){
-            console.log('created');
         },
         mounted(){
-            console.log('created');
             this.requestInfo();
         },
         methods:{
             requestInfo(){
-                console.log('requestInfo',this.souceUrl);
                 if(this.souceUrl){
                     var url = 'https://m.toutiao.com/' + this.souceUrl + '/info/';
                     let self = this;
@@ -90,7 +103,19 @@ import { utils } from '../common/js/utils'
                 this.$refs.unfold_field.style.display = 'none';
             }
             ,share(){
-                console.log('share');
+                this.isShare = true;
+            }
+            ,hide_Share(){
+                this.isShare = false;
+            }
+            ,collection(){
+                console.log('收藏');
+                if(!this.isCollection){
+                    this.$store.commit('addCollection',this.newitem);
+                }else{
+
+                }
+                this.isCollection = !this.isCollection;
             }
         },
         watch:{
@@ -110,12 +135,13 @@ import { utils } from '../common/js/utils'
             }
         },
         activated(){
-            console.log('activated newsDetails');
             this.souceUrl = this.$route.params.id;
+            this.newitem = JSON.parse(this.$route.query.newsItem);
+            console.log(this.newitem);
             this.requestInfo();
         },
         updated(){
-            console.log('updated newsDetails');
+//            console.log('updated newsDetails');
             this.$refs.news_content.style.height = '800px';
             this.$refs.unfold_field.style.display = 'block';
         }
@@ -242,6 +268,12 @@ import { utils } from '../common/js/utils'
                 width: 100%;
                 background-image: linear-gradient(-180deg,hsla(0,0%,100%,0),#fff);
             }
+        }
+        .moveTop-enter-active,.moveTop-leave-active{
+            transition: all 0.5s;
+        }
+        .moveTop-enter,.moveTop-leave-to{
+            transform: translateY(150px);
         }
     }
 </style>

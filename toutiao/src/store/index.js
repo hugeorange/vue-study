@@ -9,13 +9,17 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
     state:{
-        count:0
+        count:0,
+        collectionNews:[]
     },
     //使用处进行 commit
     mutations,
     getters:{
         nowTime(state){
             return new Date() - 0 + '-' + state.count;
+        },
+        getNewsList(state){
+            return state.collectionNews;
         }
     }
 });

@@ -14,7 +14,7 @@ const newsDetails = resolve => require(['@/components/newsDetails'],resolve);
 
 export default new Router({
   routes: [
-      //嵌套路由设置，此处不适用嵌套路由
+      // 嵌套路由设置，此处不适用嵌套路由
       // {path: '/index', name:'index', component: index,
       //   children:[
       //       {path: '/index/newsDetails/:id', name: 'newsDetails',component:newsDetails },
