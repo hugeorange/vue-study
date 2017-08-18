@@ -30,7 +30,7 @@
   - `import jsonp from 'jsonp'`
   - 将 ajax 请求，封装在 一个文件里，方便集中处理业务逻辑
 
-
+### 后来又将 底部导航按钮，抽离出来放在一个 bottom.vue 组件里，这样就可以需要的时候引入，没必要每个页面都存在 底部导航栏
 ### index.vue 文件
 
 1. 顶部 x-header 组件 可能也怪我不会阅读文档吧，看不懂
@@ -312,3 +312,8 @@ let history = window.sessionStorage.__router__;
 - 由于数据是存在 url 里 故可以在刷新页面仍可以拿到数据
 
 ### 收藏页 ==> vuex
+- 在详情页进行 收藏/取消 操作
+- 将该操作的数据存在 vuex 里，然后存在 localStorage 里，
+- store.js 里建一个 newsItem字段，值为数组，然后通过 mutations 操作，
+- 向数组里添加或删除元素
+- 在收藏组件里进行渲染
