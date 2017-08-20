@@ -113,6 +113,7 @@
                     {'name':'国际','key':'news_world'},
                     {'name':'时尚','key':'news_fashion'},
                 ],
+                prevkey:'',     //上一个选中的标签
                 isCur:0,        //当前点击的tab页
                 newsData:[],    //新闻列表
                 loadingShow:false,   //控制下拉刷新 load
@@ -125,10 +126,6 @@
             }
         },
         methods:{
-            bottommenu(menu){
-                console.log(menu)
-            },
-
             email(){
                 console.log('email');
                 this.ttt = 1;
@@ -141,16 +138,19 @@
 
             request(key,fn) {
                 let self = this;
+
                 ajax(key,function (data) {
-                    self.saveStore(data.data);
+                    self.newsData = data.data;
                     self.$nextTick(()=>{
-                        self._initScroll();
+                        self.news_scroll && self.news_scroll.refresh();
                         fn && fn();
                     })
-                })
-            },
-            saveStore(data){
+                });
 
+            },
+
+            //暂时不考虑 vuex 存储
+            saveStore(data){
                 let newsObj = {
                     collectionFlag:false,
                     item_id:''
@@ -180,6 +180,7 @@
                 if(!event._constructed) return;
                 this.isCur = index;
                 this.tabkey = this.tab_title[index]['key'];
+                console.log(this.tabkey,'我执行的次数');
                 this.request(this.tabkey);
             },
             //初始化 better-scroll
@@ -188,7 +189,7 @@
                 let flagdown = false;
                 let flagup = false;
 
-                let scroll = new BScroll(this.$refs.tab_title_hook,{
+                this.title_scroll = new BScroll(this.$refs.tab_title_hook,{
                     scrollX: true,
                     click:true
                 });
@@ -212,7 +213,7 @@
                     if(pos.y < this.maxScrollY ){
                         self.loadingShow2 = true;
                         flagup = true;
-                        console.log('上拉加载。。。');
+//                        console.log('上拉加载。。。');
                     }
                 });
 
@@ -277,12 +278,14 @@
             let key0 = this.tab_title[0]['key'];
             this.request(key0);
         },
-        mounted(){},
+        mounted(){
+            this._initScroll();
+        },
         updated(){
-//             console.log('updated,index.vue');
             var self = this;
             this.$nextTick(()=>{
                 self.news_scroll.refresh();
+                self.title_scroll.refresh();
             })
         }
     }
@@ -357,8 +360,8 @@
             left:0;
             right:0;
             width:100%;
-            top:1.62rem;
-            bottom:0;
+            top:1.60rem;
+            bottom:50px;
             background-color: #fff;
             overflow: hidden;
             .news-content{

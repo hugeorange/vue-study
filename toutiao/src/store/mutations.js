@@ -15,7 +15,6 @@ export default {
         utils.localstorage.savedata('news',state.collectionNews);
     },
     initCollection(state,item){
-        debugger
         state.collectionNews = item;
     },
     addNewsArr(state,item){

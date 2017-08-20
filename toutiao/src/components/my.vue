@@ -86,7 +86,7 @@
                 }
                 .title{
                     font-size: 20px;
-                    color: #1aea7c;
+                    color: #ea1a4e;
                     margin-top: 8px;
                 }
             }

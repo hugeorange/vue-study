@@ -1,6 +1,5 @@
 <template>
-   <div id="share">
-
+   <div id="share" @click="hidewrap">
        <transition name="moveTop">
             <div class="share-wrap" v-show="isShow">
                <div class="share-content">
@@ -33,6 +32,10 @@
             },
             share(key){
                 alert('分享' + this.shareItem[key]);
+            },
+            hidewrap(){
+                document.getElementsByTagName('body')[0].style.overflow = 'auto';
+                this.$emit('hideShare');
             }
         }
     }
@@ -78,7 +81,7 @@
         }
 
         &.moveTop-enter-active,&.moveTop-leave-active{
-            transition: all 0.5s;
+            transition: all 0.3s;
         }
         &.moveTop-enter, &.moveTop-leave-to{
             transform: translateY(150px);

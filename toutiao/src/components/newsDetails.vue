@@ -121,12 +121,9 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
         },
         watch:{
             '$route'(){
-                // console.log('$route0',this.$route.params.id);
-                // this.souceUrl = this.$route.params.id;
-                // this.requestInfo();
                 this.$refs.news_content.style.height = '800px';
                 this.$refs.unfold_field.style.display = 'block';
-
+                document.getElementsByTagName('body')[0].style.overflow = 'auto';
             }
         },
         filters:{

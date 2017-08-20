@@ -8,8 +8,10 @@
 4. 还有很多功能没有实现，后期在完善吧！
 5. 项目地址：[github-项目地址](https://github.com/hugeorange/vue-demo/tree/master/toutiao)
 6. 预览效果: [demo预览效果](https://hugeorange.github.io/demo/toutiao)
+7. 建议在 chrome 浏览器查看（不知道为什么数据请求，一个劲卡死，不知道是不是因为今日头条接口的原因）
 
-
+### 演示
+![我的头像](./preview.gif)
 ##### 静态资源
 1. 头部添加 rem 布局
 2. 引入 reset.css

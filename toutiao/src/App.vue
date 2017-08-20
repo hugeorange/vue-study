@@ -59,9 +59,10 @@
           '$route' (to, from) {
                this.transitionName = JSON.parse(window.sessionStorage.history).transitionName;
                let index = this.bottomArr.indexOf(to.path);
-               console.log(index);
                if(index == -1){
                    this.isBottom = false;
+               }else{
+                   this.isBottom = true;
                }
           }
       },
