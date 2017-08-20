@@ -10,7 +10,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state:{
         count:0,
-        collectionNews:[]
+        collectionNews:[],
+        newsArr:[]
     },
     //使用处进行 commit
     mutations,
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
         },
         getNewsList(state){
             return state.collectionNews;
+        },
+        getNewsArr(state){
+            return state.newsArr;
         }
     }
 });

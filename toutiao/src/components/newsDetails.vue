@@ -39,10 +39,8 @@
             <div>展开全文<i class="icon iconfont icon-unfold"></i></div>
         </div>
 
-        <!--分享组件-->
-        <transition name="moveTop">
-            <share v-on:hideShare="hide_Share" :isShow="isShare" v-show="isShare"></share>
-        </transition>
+        <!--分享组件   -->
+        <share v-on:hideShare="hide_Share" :isShow="isShare" v-show="isShare"></share>
 
     </div>
 
@@ -77,6 +75,7 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
             }
         },
         created(){
+
         },
         mounted(){
             this.requestInfo();
@@ -104,6 +103,7 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
             }
             ,share(){
                 this.isShare = true;
+                document.getElementsByTagName('body')[0].style.overflow = 'hidden';
             }
             ,hide_Share(){
                 this.isShare = false;
@@ -111,11 +111,12 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
             ,collection(){
                 console.log('收藏');
                 if(!this.isCollection){
+                    console.log(this.newitem.item_id);
                     this.$store.commit('addCollection',this.newitem);
+                    this.isCollection = !this.isCollection;
                 }else{
 
                 }
-                this.isCollection = !this.isCollection;
             }
         },
         watch:{
@@ -123,7 +124,10 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
                 // console.log('$route0',this.$route.params.id);
                 // this.souceUrl = this.$route.params.id;
                 // this.requestInfo();
-           }
+                this.$refs.news_content.style.height = '800px';
+                this.$refs.unfold_field.style.display = 'block';
+
+            }
         },
         filters:{
             formatTime(time){
@@ -137,13 +141,22 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
         activated(){
             this.souceUrl = this.$route.params.id;
             this.newitem = JSON.parse(this.$route.query.newsItem);
-            console.log(this.newitem);
             this.requestInfo();
+            this.isCollection = false;
         },
         updated(){
-//            console.log('updated newsDetails');
-            this.$refs.news_content.style.height = '800px';
-            this.$refs.unfold_field.style.display = 'block';
+
+//            console.log(this.$store.state.newsArr);
+//            this.$store.state.newsArr.forEach( (item,index) => {
+//                if( item.item_id === this.newitem.item_id){
+//                    let flag = item.collectionFlag;
+//                    if(flag){
+//                        this.isCollection = true;
+//                    }else{
+//                        this.isCollection = false;
+//                    }
+//                }
+//            })
         }
     }
 </script>
@@ -268,12 +281,6 @@ import {mapState,mapMutations,mapGetters} from 'vuex'
                 width: 100%;
                 background-image: linear-gradient(-180deg,hsla(0,0%,100%,0),#fff);
             }
-        }
-        .moveTop-enter-active,.moveTop-leave-active{
-            transition: all 0.5s;
-        }
-        .moveTop-enter,.moveTop-leave-to{
-            transform: translateY(150px);
         }
     }
 </style>

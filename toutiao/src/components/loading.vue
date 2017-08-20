@@ -25,7 +25,7 @@
 		};
 
 		console.log(loading);
-        
+
 		export default loading;
 
 //		export default{
@@ -116,4 +116,5 @@
             left: 14px;
             -webkit-animation-delay:1.04s;
         }
+
 </style>

@@ -78,12 +78,6 @@
             <router-view></router-view>
         </div>
 
-        <!-- 测试 对于普通标签 v-show v-if 均能触发 transition 动画-->
-        <transition name="fade1">
-            <div class="ttt" v-if="ttt==1"></div>
-        </transition>
-
-        <bottom></bottom>
 
         <!--对于动态增加的组件 貌似 v-show 不能触发 transition动画，要用 v-if-->
         <transition name="fade">
@@ -98,7 +92,6 @@
     import BScroll from 'better-scroll'
     import toTop from '../components/toTop'
     import bottom from '../components/bottom'
-    //    import loading from '../components/loading'
     export default {
         name:'index',
         components:{
@@ -127,7 +120,8 @@
                 loadTip:false,      //刷新成功提示条
                 tabkey:'',           //缓存当前选中的 tab页对应的 key
                 toTop:false,         //回到顶部
-                ttt:0
+                ttt:0,
+                newsArr:[],          //存储在 vuex 里面的数据
             }
         },
         methods:{
@@ -146,15 +140,40 @@
             },
 
             request(key,fn) {
-                var self = this;
+                let self = this;
                 ajax(key,function (data) {
-                    self.newsData = data.data;
+                    self.saveStore(data.data);
                     self.$nextTick(()=>{
                         self._initScroll();
                         fn && fn();
                     })
                 })
             },
+            saveStore(data){
+
+                let newsObj = {
+                    collectionFlag:false,
+                    item_id:''
+                };
+
+                let newsdata = data.map((item) => {
+                    newsObj.collectionFlag = false;
+                    newsObj.item_id = item.item_id;
+                    this.newsArr.push(newsObj);
+                    return item;
+                });
+
+                /**
+                 * 算了，好像存 vuex 没有多大意义，
+                 * 而且复杂度直线提升
+                 * */
+                this.$store.commit('addNewsArr',this.newsArr);
+                /**
+                 * 暂时，不考虑了，等有新想法在考虑
+                 * */
+                this.newsData = this.newsData.concat(newsdata);
+            },
+
             highlight(index){
                 //阻止pc 端，点击事件执行多次，（不是自己派发的事件，return）
                 //点击事件是靠 better-scroll 派发的
@@ -213,7 +232,8 @@
                         console.log('flagup');
                         flagup = false;
                         ajax(self.tabkey,function (data) {
-                            self.newsData = self.newsData.concat(data.data);
+//                            self.newsData = self.newsData.concat(data.data);
+                            self.saveStore(data.data);
                             self.$nextTick(()=>{
                                 self.loadingShow2 = false;
                             })
@@ -223,9 +243,10 @@
 
             },
             //滚动到顶部
-            scroll_to(){
+            scroll_to(item){
                 this.toTop = false;
                 this.news_scroll.scrollTo(0, 0, 300);
+                console.log(item);
             }
 
         },
@@ -274,6 +295,7 @@
         right: 0;
         top: 0;
         bottom: 50px;
+        min-height: 100%;
         .header-x{
             position: fixed;
             top:0;

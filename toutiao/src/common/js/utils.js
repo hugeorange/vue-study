@@ -22,7 +22,23 @@ let utils = {
             }
             return format;
         };
+    },
+    localstorage:{
+        savedata(key,value){
+            window.localStorage.setItem(key,JSON.stringify(value));
+        },
+        readdata(key){
+            if(window.localStorage.key){
+                return JSON.parse(window.localStorage.getItem(key));
+            }
+        },
+        emptydata(){
+            window.localStorage.clear();
+        },
+        removedata(){
+            window.localStorage.removeItem(key)
+        }
     }
-}
+};
 
 export {utils}

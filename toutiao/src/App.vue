@@ -1,11 +1,39 @@
 <template>
   <div id="app">
+      <div class="tabwrap" v-show="isBottom">
+          <div class="tab-item">
+              <router-link to="/index">
+                  <div class="icon icon1"></div>
+                  <div class="icon-word">首页</div>
+              </router-link>
+          </div>
+          <div class="tab-item">
+              <router-link to="/collection">
+                  <div class="icon icon2"></div>
+                  <div class="icon-word">收藏</div>
+              </router-link>
+          </div>
+          <div class="tab-item">
+              <router-link to="/follow">
+                  <div class="icon icon3"></div>
+                  <div class="icon-word">关注</div>
+              </router-link>
+          </div>
+          <div class="tab-item">
 
-        <!--<transition :name="transitionName">-->
-         <transition name="fade">
+              <router-link to="/my">
+                  <div class="icon icon4"></div>
+                  <div class="icon-word">我的</div>
+              </router-link>
+          </div>
+      </div>
+
+        <transition :name="transitionName">
+         <!--<transition name="fade">-->
             <keep-alive>
                 <router-view></router-view>
             </keep-alive>
+        <!--</transition>-->
         </transition>
 
   </div>
@@ -19,7 +47,9 @@
       },
       data(){
           return {
-              transitionName:''
+              transitionName:'',
+              isBottom:true,
+              bottomArr:['/index','/collection','/follow','/my']
           }
       },
       methods:{
@@ -27,15 +57,19 @@
       },
       watch: {
           '$route' (to, from) {
-              // this.transitionName = JSON.parse(window.sessionStorage.__router__).transitionName;
+               this.transitionName = JSON.parse(window.sessionStorage.history).transitionName;
+               let index = this.bottomArr.indexOf(to.path);
+               console.log(index);
+               if(index == -1){
+                   this.isBottom = false;
+               }
           }
       },
       created(){
 
       },
       updated(){
-        // console.log('updated');
-
+//         console.log(this.$router);
       }
 
   }
@@ -55,7 +89,7 @@
             display: flex;
             height: 45px;
             padding-top: 5px;
-            z-index: 9;
+            z-index: 99;
             @include border-1px(#eee);
 
             .tab-item {
@@ -110,33 +144,35 @@
         .fade-enter, .fade-leave-to {
             opacity: 0;
         }
-    }
 
-/*
         //微信切换样式 ，左右滚动
         //前进动画样式
         .forward-enter-active,.forward-leave-active{
-          transition: all 0.3s;
+            transition: all 0.3s;
         }
 
         .forward-enter{
-          transform: translateX(100%);
+            transform: translateX(100%);
         }
         .forward-leave-to{
-          transform: translateX(-100%);
+            transform: translateX(-100%);
         }
 
         // 后退动画样式
         .reverse-enter-active,.reverse-leave-active{
-          transition: all 0.3s;
+            transition: all 0.3s;
         }
         .reverse-enter{
-          transform: translateX(-100%);
+            transform: translateX(-100%);
         }
         .reverse-leave-to{
-          transform: translateX(100%);
+            transform: translateX(100%);
         }
+
     }
-*/
+
+
+
+
 
 </style>

@@ -1,7 +1,7 @@
 /**
  * Created by orange on 2017/8/13.
  */
-
+import {utils} from '../common/js/utils'
 //全局触发事件
 export default {
     increment (state){
@@ -12,6 +12,14 @@ export default {
     },
     addCollection(state,item){
         state.collectionNews.push(item);
+        utils.localstorage.savedata('news',state.collectionNews);
+    },
+    initCollection(state,item){
+        debugger
+        state.collectionNews = item;
+    },
+    addNewsArr(state,item){
+        state.newsArr = item;
     },
     reduceCollection(state){
 

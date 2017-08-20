@@ -15,7 +15,7 @@
         },
         methods:{
             scrolltoTop(){
-                this.$emit('scrolltoTop')
+                this.$emit('scrolltoTop','1111');
             }
         }
     }

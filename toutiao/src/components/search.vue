@@ -14,8 +14,12 @@
         <div class="news-wrapper" >
 
             <ul class="news-content" >
+                <!--:to = "'/newsDetails' + item.seo_url"-->
                 <router-link class="news-item" v-for="(item,index) in searchlist"
-                             :to = "'/newsDetails' + item.seo_url"
+                             :to="{
+                                path:'/newsDetails' + item.seo_url,
+                                query:{newsItem:JSON.stringify(item)}
+                             }"
                              tag='li'
                              :key='index'
                              v-if="item.abstract"
@@ -79,7 +83,7 @@ import { utils } from '../common/js/utils'
             search(){
                 let input = this.searchval;
                 let self = this;
-                let url = 'http://www.toutiao.com/search_content/?offset=0&format=json&keyword='+input+'&autoload=true&count=20&cur_tab=1';
+                let url = 'https://www.toutiao.com/search_content/?offset=0&format=json&keyword='+input+'&autoload=true&count=20&cur_tab=1';
                 ajax2(url,function(data){
                     self.searchlist = data.data;
                 },function(msg){

@@ -12,7 +12,7 @@
   <link rel="stylesheet" type="text/css" href="./static/css/reset.css">
 
 
-    <link rel="stylesheet" href="https://at.alicdn.com/t/font_370834_19m1z6y518iio1or.css">
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_370834_x16j2tb331r4fgvi.css">
     <script type="text/javascript">
         (function (doc, win) {
             var docEl = doc.documentElement,
@@ -34,76 +34,26 @@
     </script>
     <style>
         .loadEffect{
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            margin: 0 auto;
-            top: 30%;
-            left: 0;
-            right: 0;
-            display: none;
-            z-index: 99999;
-        }
-        .loadEffect span{
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #13c913;
-            position: absolute;
-            -webkit-animation: load 1.04s ease infinite;
-        }
-        @-webkit-keyframes load{
-            0%{
-                opacity: 1;
-            }
-            100%{
-                opacity: 0.2;
-            }
-        }
-        .loadEffect span:nth-child(1){
-            left: 0;
-            top: 50%;
-            margin-top:-8px;
-            -webkit-animation-delay:0.13s;
-        }
-        .loadEffect span:nth-child(2){
-            left: 14px;
-            top: 14px;
-            -webkit-animation-delay:0.26s;
-        }
-        .loadEffect span:nth-child(3){
-            left: 50%;
-            top: 0;
-            margin-left: -8px;
-            -webkit-animation-delay:0.39s;
-        }
-        .loadEffect span:nth-child(4){
-            top: 14px;
-            right:14px;
-            -webkit-animation-delay:0.52s;
-        }
-        .loadEffect span:nth-child(5){
-            right: 0;
-            top: 50%;
-            margin-top:-8px;
-            -webkit-animation-delay:0.65s;
-        }
-        .loadEffect span:nth-child(6){
-            right: 14px;
-            bottom:14px;
-            -webkit-animation-delay:0.78s;
-        }
-        .loadEffect span:nth-child(7){
+            position: fixed;
+            left:0;
+            right:0;
+            top:0;
             bottom: 0;
-            left: 50%;
-            margin-left: -8px;
-            -webkit-animation-delay:0.91s;
+            z-index: 999;
         }
-        .loadEffect span:nth-child(8){
-            bottom: 14px;
-            left: 14px;
-            -webkit-animation-delay:1.04s;
+        .loadEffect .tips{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 40%;
+            margin: 0 auto;
+            width: 110px;
+            height: 40px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -111,14 +61,7 @@
 <div id="app"></div>
 
 <div class="loadEffect">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+    <div class="tips">正在加载中...</div>
 </div>
 
 <!-- built files will be auto injected -->
