@@ -11,4 +11,4 @@ yarn-error.log*
 *.tmp
 *.err
 *.idea
-
+*.vscode
