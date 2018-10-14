@@ -39,6 +39,7 @@
       align-items: center
       height: 40px
       overflow: hidden
+      text-align: left 
       &.list-enter-active, &.list-leave-active  // 动画
         transition: all 0.1s
       &.list-enter, &.list-leave-to

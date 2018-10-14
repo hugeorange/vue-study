@@ -43,6 +43,7 @@ const mutations = {  // 对象里挂载的是一些方法
     state.playHistory = history
   },
   
+  // 操作 最喜欢列表，== 保存 和 删除
   [types.SET_FAVORITE_LIST](state, list) {
     state.favoriteList = list
   }

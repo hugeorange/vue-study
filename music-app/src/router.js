@@ -1,16 +1,17 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
-
-import Recommend from '@/components/recommend/recommend';
-import Singer from './components/singer/singer';
-import Rank from './components/rank/rank';
-import Search from './components/search/search';
-import SingerDetail from './components/singer-detail/singer-detail';
-import Disc from './components/disc/disc';
-import TopList from './components/top-list/top-list';
+// import Home from './views/Home.vue';
 
 Vue.use(Router);
+
+const Recommend = () => import(/* webpackChunkName: "recommend" */ '@/components/recommend/recommend');
+const Singer = () => import(/* webpackChunkName: "singer" */ '@/components/singer/singer');
+const Rank = () => import(/* webpackChunkName: "rank" */ '@/components/rank/rank');
+const Search = () => import(/* webpackChunkName: "search" */ '@/components/search/search');
+const User = () => import(/* webpackChunkName: "user-center" */ '@/components/user-center/user-center');
+const SingerDetail = () => import(/* webpackChunkName: "singer-detail" */ '@/components/singer-detail/singer-detail');
+const Disc = () => import(/* webpackChunkName: "disc" */ '@/components/disc/disc');
+const TopList = () => import(/* webpackChunkName: "top-list" */ '@/components/top-list/top-list');
 
 export default new Router({
   routes: [
@@ -31,7 +32,6 @@ export default new Router({
     },
     {
       path: '/singer',
-      // name: 'singer',
       component: Singer,
       children: [
         {
@@ -63,17 +63,23 @@ export default new Router({
       ]
     },
     {
-      path: '/home',
-      name: 'home',
-      component: Home,
+      path: '/user',
+      name: 'user',
+      component: User
     },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
-    },
+
+    // {
+    //   path: '/home',
+    //   name: 'home',
+    //   component: Home,
+    // },
+    // {
+    //   path: '/about',
+    //   name: 'about',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (about.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+    // },
   ],
 });

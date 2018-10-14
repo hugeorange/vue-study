@@ -115,11 +115,9 @@ export const deleteSong = function ({commit, state}, song) { //删除歌曲
   commit(types.SET_SEQUENCE_LIST, sequenceList)
   commit(types.SET_CURRENT_INDEX, currentIndex)
 
-  if (!playlist.length) {
-    commit(types.SET_PLAYING_STATE, false)  // 删除歌曲的时候会有状态的切换
-  } else {
-    commit(types.SET_PLAYING_STATE, true)
-  }
+  const playingStatus = playlist.length > 0
+
+  commit(types.SET_PLAYING_STATE, playingStatus)  // 删除歌曲的时候会有状态的切换
 }
 
 export const deleteSongList = function ({commit}) {  //清空歌曲列表
@@ -133,10 +131,12 @@ export const savePlayHistory = function ({commit}, song) {
   commit(types.SET_PLAY_HISTORY, savePlay(song))
 }
 
+// 保存
 export const saveFavoriteList = function ({commit}, song) {
   commit(types.SET_FAVORITE_LIST, saveFavorite(song))
 }
 
+// 删除
 export const deleteFavoriteList = function ({commit}, song) {
   commit(types.SET_FAVORITE_LIST, deleteFavorite(song))
 }

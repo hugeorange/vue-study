@@ -64,7 +64,7 @@
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
-              <i class="icon-not-favorite"></i>
+              <i class="icon-not-favorite" @click="toggleFavorite(currentSong)" :class="getFavoriteIcon(currentSong)"></i>
             </div>
           </div>
         </div>
@@ -86,13 +86,14 @@
           </progress-circle>
         </div>
 
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon-playlist"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
      <!--音乐播放通过audio实现，歌曲在播放时会派发@timeupdate 事件-->
-    <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+    <audio ref="audio" :src="currentSong.url" @playing="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -108,18 +109,19 @@
   import {getLyric} from '@/api/song'
   import Lyric from 'lyric-parser' // 歌词的解析（作者自己写的一个包）
   import Scroll from '@/base/scroll/scroll'
-  // import {playerMixin} from '@/common/js/mixin'
-  // import Playlist from '@/components/playlist/playlist'
+  import {playerMixin} from '@/common/js/mixin'
+  import Playlist from '@/components/playlist/playlist'
 
   const transform = prefixStyle('transform') //前缀
   const transitionDuration = prefixStyle('transitionDuration') //前缀
 
   export default {
-    // mixins: [playerMixin],  // 混入
+    mixins: [playerMixin],  // 混入
     components: {
       ProgressBar,
       ProgressCircle,
       Scroll,
+      Playlist,
     },
     data() {
       return {
@@ -149,25 +151,26 @@
       percent() {
         return this.currentTime / this.currentSong.duration
       },
-      iconMode() { // 播放模式
-        let mode = "";
-        if (this.mode === playMode.sequence) {
-          mode = "icon-sequence"
-        } else if (this.mode === playMode.loop) {
-          mode = "icon-loop"
-        } else {
-          mode = "icon-random"
-        }
-        return mode
-      },
+      // 放入 playermixin
+      // iconMode() { // 播放模式
+      //   let mode = "";
+      //   if (this.mode === playMode.sequence) {
+      //     mode = "icon-sequence"
+      //   } else if (this.mode === playMode.loop) {
+      //     mode = "icon-loop"
+      //   } else {
+      //     mode = "icon-random"
+      //   }
+      //   return mode
+      // },
       ...mapGetters([
         'fullScreen',
-        'playlist',
-        'currentSong',
+        // 'playlist',
+        // 'currentSong',
         'playing',
         'currentIndex',
-        'mode',
-        'sequenceList', // 顺序播放列表
+        // 'mode',
+        // 'sequenceList', // 顺序播放列表
       ])
     },
     created() {
@@ -175,9 +178,15 @@
 
     },
     methods: {
+      // 播放列表显隐
+      showPlaylist() {
+        this.$refs.playlist.show();
+      },
       // 获取歌词
       getLyric() {
           this.currentSong.getLyric().then(lyric => {
+            // 当切换歌曲切换时歌词也会切换，也会重新new，判断 当前歌词与缓存中的歌词相同时，才去new 否则就return
+            if (this.currentSong.lyric !== lyric) return
             this.currentLyric = new Lyric(lyric, this.handleLyric)
             if (this.playing) {
               this.currentLyric.play()
@@ -261,6 +270,7 @@
         if (!this.songReady) return
         if (this.playlist.length === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex - 1          
           if(index === -1) index = this.playlist.length -1 // 第一首
@@ -270,9 +280,11 @@
         this.songReady = false
       },
       next() {
-        if (!this.songReady) return        
+        if (!this.songReady) return
+
         if (this.playlist.length === 1) {
           this.loop()
+          return
         } else {
           let index = this.currentIndex + 1
           if(index === this.playlist.length) index = 0 // 最后一首
@@ -282,10 +294,14 @@
         this.songReady = false
       },
       ready() {  // （为用户快速点击所做的处理）audio 上触发，表示只有this.songReady = true时才可以播放， 歌曲ok
-        this.songReady = true
+        // 防止切换太快，造成报错 DOMException: The play() request was interrupted by a new load request
+        // 用 onPlaying 事件代替 onPlay
+        setTimeout(() => {
+          this.songReady = true
+          this.savePlayHistory(this.currentSong) //存储播放纪录
+        })
       },
       error() { // （为用户快速点击所做的处理）audio 上触发，当网络出现错误或下一首歌不存在时触发
-        console.log('error触发了')
         this.songReady = true
       },
       updateTime(e) {
@@ -392,33 +408,38 @@
         return num
       },
       
-      changeMode() {
-        const mode = (this.mode + 1) % 3
-        this.setPlayMode(mode) // 改变样式
-        let list = ""
-        if (mode === playMode.random) {
-          list = shuffle(this.sequenceList)
-        } else {
-          list = this.sequenceList
-        }
-        this.resetCurrentIndex(list) // 当 playlist 改变时 保证 currentSong 不变
-        this.setPlayList(list);
-      },
-      resetCurrentIndex(list) {
-        let index = list.findIndex(item => item.id === this.currentSong.id)
-        this.setCurrentIndex(index)
-      },
+      // changeMode() {
+      //   const mode = (this.mode + 1) % 3
+      //   this.setPlayMode(mode) // 改变样式
+      //   let list = ""
+      //   if (mode === playMode.random) {
+      //     list = shuffle(this.sequenceList)
+      //   } else {
+      //     list = this.sequenceList
+      //   }
+      //   this.resetCurrentIndex(list) // 当 playlist 改变时 保证 currentSong 不变
+      //   this.setPlayList(list);
+      // },
+      // resetCurrentIndex(list) {
+      //   let index = list.findIndex(item => item.id === this.currentSong.id)
+      //   this.setCurrentIndex(index)
+      // },
 
       ...mapMutations({
         setFullScreen: 'SET_FULL_SCREEN',
         setPlayState: 'SET_PLAYING_STATE',
-        setCurrentIndex: 'SET_CURRENT_INDEX',
-        setPlayMode: 'SET_PLAY_MODE',
-        setPlayList: "SET_PLAYLIST",
-      })
+        // setCurrentIndex: 'SET_CURRENT_INDEX',
+        // setPlayMode: 'SET_PLAY_MODE',
+        // setPlayList: "SET_PLAYLIST",
+      }),
+      // 添加到播放历史，放到 vuex
+      ...mapActions([
+        'savePlayHistory'
+      ])
     },
     watch: {
       currentSong(newSong, oldSong) {
+        if (!newSong.id) return
         if (newSong.id === oldSong.id) return
         if (this.currentLyric) this.currentLyric.stop()
 

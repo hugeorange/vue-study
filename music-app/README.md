@@ -96,3 +96,5 @@ methods: {
 
 - [ ] 构造类来实例化所需对象的格式而不是直接在业务代码里用简单对象构造 如：`song.js` 和 `singer.js`
 - [ ] 善用 -- box-sizing: border-box  //border和padding计算入width之内
+- [ ] 组件内的 this 上为什么会挂载 vuex 内声明的方法和属性（并没有引入 vuex 和 设置 mapGetters...）
+    1. 由于引入 mixin 导致的，两个组件有好多相同的逻辑 操作 vuex，可以抽象到一个 mixin文件里
