@@ -96,8 +96,6 @@
             return song.id === item.id
           })
         }
-        console.log(this);
-        console.log(this.setCurrentIndex);
         this.setCurrentIndex(index)
         this.setPlayingState(true) // 播放状态修改
       },

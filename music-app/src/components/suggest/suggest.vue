@@ -121,7 +121,6 @@
         let ret = []
         if (data.zhida && data.zhida.singerid) { // 歌手数据
           ret.push({...data.zhida, ...{type: TYPE_SINGER}})
-          console.log({...data.zhida, ...{type: TYPE_SINGER}},'1111')
         }
         if (data.song) {
           ret = ret.concat(this._normalizeSongs(data.song.list))

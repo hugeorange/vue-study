@@ -97,7 +97,6 @@
         let firstTouch = e.touches[0]  //获取第一个触点         
         this.touch.y1 = firstTouch.pageY  // 页面触点Y坐标
         this.touch.anchorIndex = anchorIndex  // 当前锚点索引
-        console.log('anchorIndex', anchorIndex);
         this._scrollTo(anchorIndex)
       },
       onShortcutTouchMove(e) {     // 滑动时触发

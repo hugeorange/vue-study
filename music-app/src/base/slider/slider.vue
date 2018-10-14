@@ -45,7 +45,6 @@
       }, 20)  // 延时保障dom渲染完成，浏览器刷新通常是17毫秒一次，这里也可以用this.$nextTick
 
       window.addEventListener('resize', () => {
-        console.log('1111')
         if (this.slider) {
           this._setSliderWidth(true);
           this.slider.refresh();

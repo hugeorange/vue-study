@@ -105,7 +105,6 @@ export default {
       // this.clearSearchHistory()
     },
     // clearSearchHistory() {
-    //   console.log('confirm')
     // },
     // 不用在 method 上挂方法了，直接在 模板中调用 mapActions 定义的方法
     // deleteSearchHistory(item) {

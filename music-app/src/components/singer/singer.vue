@@ -95,7 +95,6 @@ export default {
       return [...hot, ...ret, ...rest];
     },
     selectSinger(item) {
-      console.log(item);
       this.$router.push(`/singer/${item.id}`)
       this.setSinger(item) // 等于执行了mutations.js里的对应方法
     },
