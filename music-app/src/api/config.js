@@ -16,6 +16,6 @@ export const options1 = { // 解决歌单数据获取报错问题另外定义 ht
 }
 
 
-export const RESFULURL = process.env.NODE_ENV == 'development' ? 'http://localhost:3003/api/music/' : 'http://admin.code-sky.cn/api/music/'
+export const RESFULURL = process.env.NODE_ENV == 'development' ? 'http://localhost:3003/api/music/' : 'https://admin.code-sky.cn/api/music/'
 
 export const ERR_OK = 0
