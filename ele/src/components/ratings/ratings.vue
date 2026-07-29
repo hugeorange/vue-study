@@ -86,30 +86,17 @@ export default {
 	},
 	created(){
 
-		this.$http.get('https://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele').then((response) => {
-			this.ratings = response.data.ratings;
-			this.$nextTick(() => {
-				this.scroll = new BScroll(this.$refs.ratings, {
-					click: true
-				});
-			});
-		});
-
-		/*
+		//使用本地 data.json 数据
 		this.$http.get('/api/ratings').then((response) => {
-			response = response.body;
-			if (response.errno === 0) {
-				this.ratings = response.data;
-				console.log(response.data);
+			if (response.data.errno === 0) {
+				this.ratings = response.data.data;
 				this.$nextTick(() => {
-//				    debugger
 					this.scroll = new BScroll(this.$refs.ratings, {
 						click: true
 					});
 				});
 			}
 		});
-		*/
 	},
 	updated(){
 	    this.$nextTick(()=>{

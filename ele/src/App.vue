@@ -41,12 +41,12 @@ export default {
     created() {
 
 
-        //用 mock.js 模拟数据请求，不在用本地 data.json 文件
-        this.$http.get('https://www.easy-mock.com/mock/596e2463a1d30433d836f112/ele/ele?id=' + this.seller.id).then((response) => {
+        //使用本地 data.json 数据
+        this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
 
-            let data = response.data.seller;
-
-            this.seller = Object.assign({}, this.seller, data);
+            if(response.data.errno === 0){
+                this.seller = Object.assign({}, this.seller, response.data.data);
+            }
 
         });
 
